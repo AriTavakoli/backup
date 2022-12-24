@@ -9,9 +9,9 @@ var { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
-var alias = {
-  'react-dom': '@hot-loader/react-dom',
-};
+// var alias = {
+//   'react-dom': '@hot-loader/react-dom',
+// };
 
 // load the secrets
 var secretsPath = path.join(__dirname, 'secrets.' + env.NODE_ENV + '.js');
@@ -29,9 +29,6 @@ var fileExtensions = [
   'woff2',
 ];
 
-if (fileSystem.existsSync(secretsPath)) {
-  alias['secrets'] = secretsPath;
-}
 
 var options = {
   mode: process.env.NODE_ENV || 'development',
@@ -54,7 +51,16 @@ var options = {
     publicPath: ASSET_PATH,
   },
   module: {
+
     rules: [
+      //loader for txt files
+      {
+        test: /\.txt$/,
+        use: 'raw-loader',
+      },
+
+
+
       {
         // look for .css or .scss files
         test: /\.(css|scss)$/,
@@ -104,7 +110,11 @@ var options = {
     ],
   },
   resolve: {
-    alias: alias,
+    // alias: alias,
+    fallback: {
+      fs: false,
+      path: false,
+    },
     extensions: fileExtensions
       .map((extension) => '.' + extension)
       .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
@@ -146,15 +156,6 @@ var options = {
       patterns: [
         {
           from: 'src/assets/img/icon-128.png',
-          to: path.join(__dirname, 'build'),
-          force: true,
-        },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/assets/img/icon-34.png',
           to: path.join(__dirname, 'build'),
           force: true,
         },

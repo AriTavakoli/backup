@@ -1,0 +1,397 @@
+//
+
+
+//parse the css by the brackets
+
+/// the word right before the brackts is the class name
+
+// the word right after the brackets is the class name
+
+// the word right after the colon is the css value
+
+// the word right after the semi colon is the css property name
+// import html from './test.html'
+// import testCss from './test.css'
+// import css from './css.txt'
+// import { parse, walk } from 'css-tree';
+
+
+
+const fs = require('fs')
+const path = require('path')
+const { parse, walk, findAll, generate } = require('css-tree');
+
+const css = fs.readFileSync(path.resolve(__dirname, './css.txt'), 'utf8')
+
+// console.log(css)
+
+
+
+// console.log(html);
+
+class Parser {
+
+  constructor(cssFile, htmlFile, parentNode) {
+    this.cssFile = cssFile;
+    this.htmlFile = htmlFile;
+    this.parentNode = parentNode;
+  }
+
+
+  parseHtml() {
+    const htmlParser = new DOMParser();
+    const htmlDoc = htmlParser.parseFromString(this.htmlFile, 'text/html');
+    return htmlDoc;
+  }
+
+
+  getNode(selector) {
+    const htmlDoc = this.parseHtml();
+
+    const node = htmlDoc.getElementsByClassName(selector)[0]
+    return node;
+  }
+
+
+  getChildren() {
+
+    const htmlDoc = this.parseHtml();
+    console.log(htmlDoc, 'htmlDoc');
+    //get element by classname
+
+    const parent = htmlDoc.getElementsByClassName(this.parentNode)[0]
+
+    console.log(parent.children, 'parent.children');
+
+  }
+
+  getAllChildren(currentNode) {
+    const childArr = []
+    const parentObj = {}
+    //create helper recursive function that adds the parent name as the key to parentObj and the children as the value
+    const helper = (currentNode, parentObj) => {
+      if (currentNode.children === undefined || currentNode.children === null) return childArr;
+      //create a nested object with the parent name as the key and the children as the value
+      parentObj[currentNode.className] = {}
+      // parentObj[currentNode.className].children = currentNode.children//
+      //loop through the children and push them into the childArr
+      for (let i = 0; i < currentNode.children.length; i++) {
+        const child = currentNode.children[i];
+        childArr.push(child)
+        helper(child, parentObj[currentNode.className])
+      }
+    }
+    helper(currentNode, parentObj)
+    return parentObj
+  }
+
+
+
+
+
+
+}
+
+
+let obj = {
+  "modalcontainer": {
+    "div-block-3": {
+      "modalcontentrow": {
+        "modalitem": {}
+      },
+      "modalsdsdcontentrow": {
+        "modalsdsditem": {},
+        "sd": {
+          "sdsd": {}
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+// console.log(passDown, 'passDown');
+
+// console.log(passDown, 'passDown');
+//loop through passdown
+
+
+
+
+/**
+ * Parses CSS text and creates an object representation of it.
+ *
+ * @param {string} cssText - The CSS text to be parsed.
+ * @param {string} className - The class name to search for in the CSS text.
+ * @return {Object} An object representation of the CSS text, with the specified class name as the root.
+ */
+function parseCssTree(cssText = '', className = '') {
+  // Check if the input is valid
+
+  if (typeof cssText !== 'string' || cssText === '') {
+    return {};
+  }
+  if (typeof className !== 'string' || className === '') {
+    return {};
+  }
+
+  let obj = {};
+
+  try {
+    // Parse the CSS text and create an AST representation of it
+    const ast = parse(cssText);
+
+    const rules = findAll(ast, (node, item, list) =>
+      node.type === 'Rule'
+    );
+
+    for (let i = 0; i < rules.length; i++) {
+      const rule = rules[i];
+
+      // Check if the class name exists
+      if (!rule.prelude.children.head || !rule.prelude.children.head.data) {
+        continue;
+      }
+
+      let classNames = rule.prelude.children.head.data.children.head.data.name;
+
+      // Check if the class name matches the provided className
+      if (classNames === className) {
+        let children = generate(rule);
+        obj[className] = children;
+      }
+    }
+  } catch (error) {
+    // Handle any errors that might occur
+    console.error(error);
+    return {};
+  }
+
+  return obj[className];
+}
+
+
+function printObjectTree(obj, indent, isLastChild, printValues) {
+  for (const key in obj) {
+    let value = '';
+    if (printValues && typeof obj[key] !== 'object') {
+      value = `: ${obj[key]}`;
+    }
+    console.log(indent + (isLastChild ? '└── ' : '├── ') + key + value);
+    if (typeof obj[key] === 'object') {
+      const childIndent = indent + (isLastChild ? '    ' : '│   ');
+      let lastChild = Object.keys(obj[key]).length === 0;
+
+      // Check if the child node is an array
+      if (Array.isArray(obj[key])) {
+        for (let i = 0; i < obj[key].length; i++) {
+          // Check if the array element is an object
+          if (typeof obj[key][i] === 'object') {
+            // Recursively print the object
+            printObjectTree(obj[key][i], childIndent + (i === obj[key].length - 1 ? '    ' : '│   '), true, printValues);
+          } else {
+            // Print the array element
+            console.log(childIndent + (i === obj[key].length - 1 ? '└── ' : '├── ') + obj[key][i]);
+          }
+        }
+      } else {
+        // Recursively print the child object
+        printObjectTree(obj[key], childIndent, lastChild, printValues);
+      }
+    }
+  }
+}
+
+
+
+
+
+const data = {
+  company: {
+    name: 'Acme Inc.',
+    employees: [
+      {
+        name: 'John',
+        age: 30,
+        job: 'Software Engineer',
+        hobbies: ['coding', 'reading', 'hiking'],
+        address: {
+          city: 'New York',
+          state: 'NY',
+          country: 'USA'
+        }
+      },
+      {
+        name: 'Jane',
+        age: 25,
+        job: 'Designer',
+        hobbies: ['art', 'photography', 'traveling'],
+        address: {
+          city: 'San Francisco',
+          state: 'CA',
+          country: 'USA'
+        }
+      }
+    ],
+    projects: [
+      {
+        name: 'Project A',
+        startDate: '2022-01-01',
+        endDate: '2022-06-30',
+        budget: 1000000,
+        team: ['John', 'Jane']
+      },
+      {
+        name: 'Project B',
+        startDate: '2022-07-01',
+        endDate: '2022-12-31',
+        budget: 2000000,
+        team: ['John']
+      }
+    ]
+  }
+};
+
+
+// printObjectTree(data, '', true, true);
+
+
+
+
+const cssText = `
+.modalcontainer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+
+}
+.div-block-3 {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+}
+.modalcontentrow {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+}
+.modalitem {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;}
+
+
+.modalsdsdcontentrow {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;}
+
+.modalsdsditem {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;}
+
+.sd {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;}
+.sdsd {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;}
+
+
+`;
+
+// console.log(parseCssTree(cssText, 'modalsdsditem'));
+
+
+
+
+let obj1 = {
+  "modalcontainer": {
+    "div-block-3": {
+      "modalitem": {},
+      "modalcontentrow": {
+
+      },
+      "modalsdsdcontentrow": {
+        "modalsdsditem": {},
+        "sd": {
+          "sdsd": {}
+        }
+      }
+    }
+  }
+}
+
+function buildCssString(obj, indent = '') {
+  let output = '';
+
+  for (const key in obj) {
+    output += indent + '.' + key + ' {\n';
+
+    if (typeof obj[key] === 'object') {
+      output += buildCssString(obj[key], indent + '  ');
+    } else {
+      output += indent + '  ' + obj[key] + ';\n';
+    }
+
+    output += indent + '}\n';
+  }
+
+  return output;
+}
+
+
+console.log(buildCssString(obj1));
+console.log(parseCssTree(cssText, 'modalcontainer'));
+
+
+
+
+// console.log(modelCSS(obj1, cssText));
+
+
+
+// console.log(passDown['.modalcontainer'] , 'passDown[modalcontainer]');
+
+
+
+
+
+// console.log(obj.modalcontainer, 'obj.modalcontainer');
+// generateSASS(passDown, obj)
+// let node = parserTest.getNode('modalcontainer')
+
+
+// parserTest.parseCssTree(node)
+
+
+// let obj = parserTest.getAllChildren(node);
+
+// let org = parserTest.organizeCss(node, obj)
+// console.log(org, 'org');
+
+// console.log(obj, 'obj');
+// // const cssString = parserTest.parseCssString(obj);
+
+// console.log(cssString, 'cssString');

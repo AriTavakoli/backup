@@ -2,27 +2,106 @@ import React from 'react';
 import logo from '../../assets/img/logo.svg';
 import './Newtab.css';
 import './Newtab.scss';
+import CssParser from './Parser/cssParser';
+import HtmlParser from './Parser/htmlParser';
+import WebflowExtractor from './Parser/webflowExtractor';
+
+import SearchFeature from './Parser/search/searchcomp';
+
+import htmlFile from './test.html';
+import css from './css.txt'
 
 const Newtab = () => {
+
+
+
+  const getStyles = async () => {
+
+    //     getComponent();
+    //     let css = await getCSS();
+    //     console.log(css, 'css');
+
+    const htmlParser = new HtmlParser(htmlFile);
+
+    let parsed = htmlParser.getAllChildren('modalcontainer');
+
+    let classNames = htmlParser.getClassNames('modalcontainer')
+
+    console.log(parsed, 'parsed');
+
+
+    const cssParser = new CssParser(css);
+
+
+
+
+
+    let cssString = cssParser.createCssString(css, classNames)
+
+    console.log(cssString, 'cssString');
+
+    console.log(cssParser.parseCssTree(css, 'modalcontainer'), 'cssString.parseCssTree(\'modalcontainer\')');
+
+
+
+
+
+
+    let mediaQueryArr = cssParser.getMediaQueries(css);
+
+
+    console.log(mediaQueryArr, 'mediaQueryArr');
+
+
+    let mediaQueryRel = cssParser.extractRelevantClasses(classNames, mediaQueryArr);
+    console.log(mediaQueryRel, 'mediaQueryRel');
+
+    let mediaString = cssParser.createMediaComponent(mediaQueryRel);
+
+    console.log(mediaString, 'mediaString');
+
+
+    let finalComponent = cssParser.createCssComponent(css, classNames, mediaQueryRel);
+
+    
+
+
+    console.log(finalComponent, 'finalComponent');
+
+
+
+
+
+    //     const parser = new Parser(css,html, 'modalcontainer');
+    // console.log('already executed');
+    //     const parsedHtmlDoc = parser.parseHtml();
+
+    //     console.log(parsedHtmlDoc, 'parsedHtmlDoc');
+
+    //     console.log(parser.getSelector('modalcontainer'), 'selector');
+
+
+
+
+
+
+    // getCSS();
+
+
+
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/pages/Newtab/Newtab.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React!
-        </a>
-        <h6>The color of this paragraph is defined using SASS.</h6>
-      </header>
-    </div>
-  );
+
+    <>
+      <button onClick={() => { getStyles() }}>Get Elements</button>
+
+      <SearchFeature />
+    </>
+  )
+
 };
+
 
 export default Newtab;

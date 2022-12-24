@@ -14,9 +14,16 @@
   },
   "dependencies": {
     "@hot-loader/react-dom": "^17.0.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-hot-loader": "^4.13.1"
+    "colors": "^1.4.0",
+    "content-disposition": "^0.5.4",
+    "css-tree": "^2.3.1",
+    "cssparser": "^0.9.4",
+    "nomnom": "^1.8.1",
+    "raw-loader": "^4.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hot-loader": "^4.13.1",
+    "selenium-webdriver": "^4.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",

@@ -1,0 +1,44 @@
+<div class="breadcrumbs">
+    <div class="inner">
+      <div class="crumbs clearfix" title="Show More">
+        <div class="crumb">
+          <div class="inner">
+            <div class="icon" style="margin-right: 4px;">
+              <div data-automation-id="Icon_Body_Body">
+                <svg data-icon="index" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" class="bem-Svg" style="display: block; transform: translate(0px, 0px);">
+                  <path fill="currentColor" d="M10.2 1H1.8c-.44 0-.8.36-.8.8v8.4c0 .44.36.8.8.8h8.4c.44 0 .8-.36.8-.8V1.8c0-.44-.36-.8-.8-.8zM6 2h1v1H6V2zM4 2h1v1H4V2zM2 2h1v1H2V2zm8 2.554V10H2V4h8v.554z">
+
+                  </path>
+                </svg>
+              </div>
+            </div>
+            <span class="label" style="margin-right: 4px;">Body</span>
+          </div>
+        </div>
+        <div class="crumb">
+          <div class="inner">
+            <div class="icon" style="margin-right: 4px;">
+              <div data-automation-id="Icon_Basic_Div">
+                <svg data-icon="index" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" class="bem-Svg" style="display: block; transform: translate(0px, 0px);">
+                  <path fill="currentColor" d="M10 2v8H2V2h8m1-1H1v10h10V1z"></path>
+                </svg>
+              </div>
+            </div>
+            <span class="label" style="margin-right: 4px;">side-bar</span>
+          </div>
+        </div>
+        <div class="crumb current">
+          <div class="inner">
+            <div class="icon" style="margin-right: 4px;">
+              <div data-automation-id="Icon_Basic_Div">
+                <svg data-icon="index" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" class="bem-Svg" style="display: block; transform: translate(0px, 0px);">
+                  <path fill="currentColor" d="M10 2v8H2V2h8m1-1H1v10h10V1z"></path>
+                </svg>
+              </div>
+            </div>
+            <span class="label" style="margin-right: 4px;">local-container</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
