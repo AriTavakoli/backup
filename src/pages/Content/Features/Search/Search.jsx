@@ -11,13 +11,31 @@ export default function Search() {
   const [tab, setTab] = useState("HTML");
   const [css, setCss] = useState('');
   const [cssJson, setCssJson] = useState('');
+  const [currentData , setCurrentData] = useState([])
+
 
 
   const onChange = (event) => {
-    console.log('onChange');
-    console.log(tab, 'tab');
+
     setValue(event.target.value);
+
+    setCurrentData(Object.keys(cssJson).filter((className) => {
+      const searchTerm = event.target.value.toLowerCase();
+      return (
+        searchTerm &&
+        className.toLowerCase().startsWith(searchTerm) &&
+        className.toLowerCase() !== searchTerm
+      );
+    }).slice(0, 10))
   };
+
+
+  const handleClear = () => {
+    setValue("");
+    setCurrentData([])
+
+  }
+
 
   const onSearch = (searchTerm) => {
     setValue(searchTerm);
@@ -121,7 +139,7 @@ export default function Search() {
 
   return (
     <>
-      <SearchBar css={css} setCss={setCss} cssJson={cssJson} onChange={onChange} onSearch={onSearch} setValue={setValue} value={value}>
+      <SearchBar onClear = {handleClear} currentData = {currentData} css={css} setCss={setCss} cssJson={cssJson} onChange={onChange} onSearch={onSearch} setValue={setValue} value={value}>
       </SearchBar>
 
 

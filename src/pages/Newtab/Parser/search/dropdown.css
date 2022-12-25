@@ -40,5 +40,16 @@
   margin-right: 5px;
 }
 
+.dropdown-row-selected {
+  background-color: rgb(126, 126, 126);
+  transition: background-color 0.1s ease-in;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  flex-shrink: 0;
+  color: white;
+  margin-right: 5px;
+}
+
 
 

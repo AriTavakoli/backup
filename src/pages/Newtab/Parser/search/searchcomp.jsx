@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Result from './Result';
+import Results from './Results';
 import './dropdown.css';
 import CodeExtractor from '../codeExtractor';
 const testdata = require("./testdata.json");
@@ -19,6 +20,9 @@ function SearchFeature() {
 
   const [showResults, setShowResults] = useState(false);
 
+
+  const [currentData, setCurrentData] = useState(data);
+
   const handleChange = (event) => {
     setValue(event.target.value);
     if (event.target.value) {
@@ -27,6 +31,12 @@ function SearchFeature() {
       setShowResults(false);
     }
   };
+
+  useEffect(() => {
+    console.log(currentData, 'currentData');
+  }, [currentData]);
+
+
   const dropdownRef = useRef(null);
 
 
@@ -93,18 +103,31 @@ function SearchFeature() {
 
   const onChange = (event) => {
     setValue(event.target.value);
+
+    setCurrentData(data.filter((item) => {
+
+      const searchTerm = value.toLowerCase();
+      const fullName = item.full_name.toLowerCase();
+
+      return (
+        searchTerm &&
+        fullName.startsWith(value) &&
+        fullName !== value
+      )
+    }).slice(0, 10))
+
+
   };
 
   const onSearch = (searchTerm) => {
     setValue(searchTerm);
 
+
+
     searchForElement(document, searchTerm);
     //scroll to the element searchterm
 
   };
-
-
-
 
 
 
@@ -139,17 +162,6 @@ function SearchFeature() {
 
 
   }, []);
-
-
-  useEffect(() => {
-    if (showResults) {
-      dropdownRef.current.style.animation = 'fadeIn 0.5s';
-    } else {
-      dropdownRef.current.style.animation = 'fadeOut 0.5s';
-    }
-  }, [showResults]);
-
-
 
 
 
@@ -187,34 +199,12 @@ function SearchFeature() {
             </div>
           </div>
         </div>
-        <div className="dropdown" ref={dropdownRef}>
-          {data
-            .filter((item) => {
-              const searchTerm = value.toLowerCase();
-              const fullName = item.full_name.toLowerCase();
+        <Results value={value}
+          onSearch={onSearch}
+          data={data}
 
-              return (
-                searchTerm &&
-                fullName.startsWith(searchTerm) &&
-                fullName !== searchTerm
-              );
-            })
-            .slice(0, 10)
-            .map((item) => (
-              <div
-                onClick={() => onSearch(item.full_name)}
-                className="dropdown-row"
-                key={item.full_name}
-              >
-                <div className='dropdown-item'>
-                  <svg data-icon="SearchMedium14" aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14" className="bem-Svg" style={{ display: 'block', position: 'static', width: '14', height: '14' }}>
-                    <path fill="currentColor" d="M15.53 14.47l-3.795-3.795A5.965 5.965 0 0013 7a6 6 0 10-6 6 5.97 5.97 0 003.675-1.264l3.795 3.795 1.06-1.06v-.001zM7 11.5c-2.48 0-4.5-2.02-4.5-4.5S4.52 2.5 7 2.5s4.5 2.02 4.5 4.5-2.02 4.5-4.5 4.5z"></path>
-                  </svg>
-                </div>
-                {item.full_name}
-              </div>
-            ))}
-        </div>
+          currentData={currentData}
+        ></Results>
 
       </div >
     );
