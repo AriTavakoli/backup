@@ -1,16 +1,16 @@
 import { printLine } from './modules/print';
 import html from './test.html'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom/client';
-
 import HtmlParser from './Parser/htmlParser';
 import CssParser from './Parser/cssParser';
 import WebflowExtractor from './Parser/webflowExtractor';
-import { useEffect } from 'react';
-import SearchFeature from './Parser/search/searchcomp';
+import Search from './Features/Search/Search';
 import { render } from 'react-dom';
 import logo from '../../assets/img/logo.svg';
 import SearchV2 from './Parser/search/searchv2';
+import CodeExtractor from './Parser/codeExtractor';
+
 
 console.log('Content script works!');
 console.log('Must reload extension for modifications to take effect.');
@@ -21,19 +21,7 @@ printLine("Using the 'printLine' function from the Print Module");
 
 const App = () => {
 
-  const [tab, setTab] = useState('HTML');
-
-
-
-  const getStyles = async () => {
-
-    //     getComponent();
-    //     let css = await getCSS();
-    //     console.log(css, 'css');
-
-
-    const parser = new WebflowExtractor();
-
+  function exportEventListener() {
     const exportButton = document.querySelector('.bem-TopBar_Body_Button.bem-TopBar_Body_ExportButton')
 
     exportButton.addEventListener('click', () => {
@@ -47,19 +35,49 @@ const App = () => {
         console.log(tabButtons, 'tabButtons');
 
 
-        console.log(tabBar, 'element');
-
         // create a div element
         const div = document.createElement('div');
 
         tabBar.appendChild(div);
 
 
-        render(<SearchFeature currentTab={tab} />, div)
+        render(<Search />, div)
 
       }, 200)
 
     })
+
+    return new Promise((resolve, reject) => {
+      resolve('resolved')
+    }
+    )
+
+  }
+
+
+  const exporter = async () => {
+
+    exportEventListener().then(() => {
+      console.log('addingTab event listener');
+      console.log('addedTab event listener');
+    })
+
+  }
+
+
+  const getStyles = async () => {
+
+    //     getComponent();
+    //     let css = await getCSS();
+    //     console.log(css, 'css');
+
+
+    const parser = new WebflowExtractor();
+
+
+    // adds event listener to export button and Renders search bar
+
+
 
 
     parser.waitForElementInIframe('drop-down');
@@ -70,40 +88,6 @@ const App = () => {
       console.log(elm, 'elm');
     })
 
-
-
-
-
-
-
-
-
-
-    // buttonElement.setAttribute('style', `
-    //   margin-top: -1px;
-    //   display: block;
-    //   width: 35px;
-    //   position: relative;
-    //   padding-top: 11px;
-    //   padding-bottom: 11px;
-    //   cursor: default;
-    // `);
-
-
-    //     const parser = new Parser(css,html, 'modalcontainer');
-    // console.log('already executed');
-    //     const parsedHtmlDoc = parser.parseHtml();
-
-    //     console.log(parsedHtmlDoc, 'parsedHtmlDoc');
-
-    //     console.log(parser.getSelector('modalcontainer'), 'selector');
-
-
-
-
-
-
-    // getCSS();
 
 
 
@@ -162,6 +146,8 @@ const App = () => {
       </button>
     );
   };
+
+
   const getComponent = () => {
 
     const componentParser = new WebflowExtractor();
@@ -200,14 +186,11 @@ const App = () => {
 
   }
 
-  useEffect(() => {
-
-  }, [])
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <h1>Export code</h1>
-      <button onClick={() => { getStyles(); getComponent(); }}>Get Elements</button>
+      <button onClick={() => { exporter(); getComponent(); }}>Get Elements</button>
     </div>
   );
 };

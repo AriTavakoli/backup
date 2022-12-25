@@ -74,6 +74,39 @@ export default class WebflowExtractor {
     });
   }
 
+
+
+  waitForDomElementExportTab(selector) {
+
+
+    console.log(`Waiting for element: ${selector} -- invoked by waitForDomElementExportTab()`);
+
+
+    return new Promise(resolve => {
+      const observer = new MutationObserver((mutations) => {
+
+        if (document.querySelectorAll(selector)[1]) {
+          let element = document.querySelectorAll(selector)[1].children[0];
+          console.log(element, 'Found element: -- invoked by waitForDomElementExportTab()');
+          resolve(element);
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+  }
+
+
+
+
+
+
+
+
   waitForElementInIframe(selector) {
     let iframe = document.getElementById('site-iframe-next').contentWindow;
     let element = iframe.document.getElementsByClassName(selector)[0];
@@ -223,7 +256,7 @@ export default class WebflowExtractor {
     }
     )
 
-   let code = this.mutationObserverElementWithSelector('code').then((code) => {
+    let code = this.mutationObserverElementWithSelector('code').then((code) => {
       const closeModal = document.querySelector('[data-automation-id="modal-close-button"]')
       this.simulateMouseClick(closeModal);
       // console.log(code.textContent, 'code')

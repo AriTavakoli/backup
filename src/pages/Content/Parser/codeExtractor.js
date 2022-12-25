@@ -54,7 +54,7 @@ export default class CodeExtractor {
     console.log(cssContent, 'cssContent');
 
     const cssContentText = cssContent.textContent
-    console.log(cssContentText, 'cssContentText');
+    // console.log(cssContentText, 'cssContentText');
 
     return cssContentText;
 
@@ -87,7 +87,7 @@ export default class CodeExtractor {
   }
 
 
-  
+
 
 
 
