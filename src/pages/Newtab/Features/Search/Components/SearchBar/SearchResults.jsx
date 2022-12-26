@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function SearchResults({ cssJson, value, onSearch, currentData }) {
+export default function SearchResults({ cssJson, value, onSearch, currentData , currentRowIndex, setCurrentRowIndex}) {
   const [currentRow, setCurrentRow] = useState(-1);
   const dropdownRef = useRef(null);
 
@@ -15,10 +15,12 @@ export default function SearchResults({ cssJson, value, onSearch, currentData })
         case 'ArrowDown':
           event.preventDefault();
           setCurrentRow((currentRow + 1) % currentData.length);
+          setCurrentRowIndex((currentRowIndex + 1) % currentData.length);
           break;
         case 'ArrowUp':
           event.preventDefault();
           setCurrentRow((currentRow + currentData.length - 1) % currentData.length);
+          setCurrentRowIndex((currentRowIndex + currentData.length - 1) % currentData.length);
           break;
         case 'Enter':
           // Get the class name of the current row

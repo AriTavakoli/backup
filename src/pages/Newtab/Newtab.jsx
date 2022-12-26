@@ -5,8 +5,7 @@ import './Newtab.scss';
 import CssParser from './Parser/cssParser';
 import HtmlParser from './Parser/htmlParser';
 import WebflowExtractor from './Parser/webflowExtractor';
-
-import SearchFeature from './Parser/search/searchcomp';
+import Search from './Features/Search/Search';
 
 import htmlFile from './test.html';
 import css from './css.txt'
@@ -63,7 +62,7 @@ const Newtab = () => {
 
     let finalComponent = cssParser.createCssComponent(css, classNames, mediaQueryRel);
 
-    
+
 
 
     console.log(finalComponent, 'finalComponent');
@@ -97,7 +96,7 @@ const Newtab = () => {
     <>
       <button onClick={() => { getStyles() }}>Get Elements</button>
 
-      <SearchFeature />
+      <Search> </Search>
     </>
   )
 

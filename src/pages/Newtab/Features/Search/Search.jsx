@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import SearchBar from './Components/SearchBar/SearchBar';
 import CodeExtractor from '../../Parser/codeExtractor';
 import WebflowExtractor from '../../Parser/webflowExtractor';
+const testdata = require('../../testdata.json')
 
 
 export default function Search() {
@@ -10,7 +11,7 @@ export default function Search() {
   const [value, setValue] = useState("");
   const [tab, setTab] = useState("HTML");
   const [css, setCss] = useState('');
-  const [cssJson, setCssJson] = useState('');
+  const [cssJson, setCssJson] = useState(testdata);
   const [currentData, setCurrentData] = useState([])
 
 
@@ -19,13 +20,7 @@ export default function Search() {
 
     setValue(event.target.value);
     setCurrentData(Object.keys(cssJson).filter(filterFunction).slice(0, 10))
-
   };
-
-
-
-
-
 
   const filterFunction = (className) => {
     const searchTerm = value.toLowerCase();
@@ -34,12 +29,6 @@ export default function Search() {
       className.toLowerCase() !== searchTerm
     );
   };
-
-
-
-
-
-
 
 
   const handleClear = () => {
@@ -137,27 +126,34 @@ export default function Search() {
   }
 
 
-  useEffect(() => {
-    tabEventLisenter().then(() => {
-      console.log('tab event Handlers added');
-      observeGetCss();
-    })
+  // useEffect(() => {
+  //   tabEventLisenter().then(() => {
+  //     console.log('tab event Handlers added');
+  //     observeGetCss();
+  //   })
+  // }, [])
 
-    console.log(cssJson, 'cssJson');
-
-  }, [cssJson])
-
-  useEffect(() => {
-    console.log(tab, 'tab');
-  }, [tab]);
+  // useEffect(() => {
+  //   console.log(tab, 'tab');
+  // }, [tab]);
 
 
 
 
   return (
     <>
-      <SearchBar onClear={handleClear} currentData={currentData} css={css} setCss={setCss} cssJson={cssJson} onChange={onChange} onSearch={onSearch} setValue={setValue} value={value}>
-      
+      <SearchBar
+        onClear={handleClear}
+        currentData={currentData}
+        css={css}
+        setCss={setCss}
+        cssJson={cssJson}
+        onChange={onChange}
+        onSearch={onSearch}
+        setValue={setValue}
+        value={value}>
+
+        
       </SearchBar>
 
 

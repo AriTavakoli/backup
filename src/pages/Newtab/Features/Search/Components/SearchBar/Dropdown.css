@@ -40,6 +40,7 @@
   margin-right: 5px;
 }
 
+
 .dropdown-row-selected {
   background-color: rgb(126, 126, 126);
   transition: background-color 0.1s ease-in;
@@ -51,5 +52,13 @@
   margin-right: 5px;
 }
 
-
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-style: none;
+  border-width: 1px;
+  border-color: rgb(33, 33, 33);
+  border-radius: 3px;
+}
 
