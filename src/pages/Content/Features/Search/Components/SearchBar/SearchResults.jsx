@@ -4,6 +4,9 @@ export default function SearchResults({ cssJson, value, onSearch, currentData })
   const [currentRow, setCurrentRow] = useState(-1);
   const dropdownRef = useRef(null);
 
+
+  // TODO : you can initiate the index of the row in the parent component and pass it as a prop to this component. This way I can reset the index to zero on every case.
+
   useEffect(() => {
     console.log(currentData.length, 'currentData.length');
     // Add event listeners for arrow keys

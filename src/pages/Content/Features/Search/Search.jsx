@@ -41,6 +41,7 @@ export default function Search() {
     setValue(searchTerm);
     searchForElement(searchTerm);
     setCurrentData([])
+    setValue("")
   };
 
   const observeGetCss = async () => {
