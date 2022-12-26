@@ -11,7 +11,7 @@ export default function Search() {
   const [tab, setTab] = useState("HTML");
   const [css, setCss] = useState('');
   const [cssJson, setCssJson] = useState('');
-  const [currentData , setCurrentData] = useState([])
+  const [currentData, setCurrentData] = useState([])
 
 
 
@@ -40,6 +40,7 @@ export default function Search() {
   const onSearch = (searchTerm) => {
     setValue(searchTerm);
     searchForElement(searchTerm);
+    setCurrentData([])
   };
 
   const observeGetCss = async () => {
@@ -139,7 +140,7 @@ export default function Search() {
 
   return (
     <>
-      <SearchBar onClear = {handleClear} currentData = {currentData} css={css} setCss={setCss} cssJson={cssJson} onChange={onChange} onSearch={onSearch} setValue={setValue} value={value}>
+      <SearchBar onClear={handleClear} currentData={currentData} css={css} setCss={setCss} cssJson={cssJson} onChange={onChange} onSearch={onSearch} setValue={setValue} value={value}>
       </SearchBar>
 
 

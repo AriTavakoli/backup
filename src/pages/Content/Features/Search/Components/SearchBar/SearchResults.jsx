@@ -38,6 +38,11 @@ export default function SearchResults({ cssJson, value, onSearch, currentData })
               onClick={() => onSearch(className)}
               className={`dropdown-row ${index === currentRow ? 'dropdown-row-selected' : ''}`}
               key={className}
+              onMouseEnter={() => setCurrentRow(index)}
+              onMouseLeave={() => setCurrentRow(-1)}
+              onMouseOver={() => setCurrentRow(index)}
+              onMouseOut={() => setCurrentRow(-1)}
+
             >
               <div className="dropdown-item">{className}</div>
             </div>
