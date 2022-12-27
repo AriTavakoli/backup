@@ -10,25 +10,34 @@ export default function Search() {
   const [value, setValue] = useState("");
   const [tab, setTab] = useState("HTML");
   const [css, setCss] = useState('');
-  const [cssJson, setCssJson] = useState('');
+  const [cssJson, setCssJson] = useState("");
   const [currentData, setCurrentData] = useState([])
+  const [currentRowIndex, setCurrentRowIndex] = useState(-1)
 
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const [availableCategories, setAvailableCategories] = useState([
+    { id: 1, name: 'ATTACHMENTS' },
+    { id: 2, name: 'CSS' },
+    { id: 3, name: 'HTML' },
+    { id: 4, name: 'COMPONENTS' },
+  ]);
 
 
   const onChange = (event) => {
 
     setValue(event.target.value);
+    setCurrentRowIndex(-1)
+
+    //!!!
     setCurrentData(Object.keys(cssJson).filter(filterFunction).slice(0, 10))
 
   };
 
 
-
-
-
-
-  const filterFunction = (className) => {
+  function filterFunction (className) {
     const searchTerm = value.toLowerCase();
+    console.log(className, "className");
     return (
       className.toLowerCase().includes(searchTerm) &&
       className.toLowerCase() !== searchTerm
@@ -36,6 +45,22 @@ export default function Search() {
   };
 
 
+  const toggleCategory = (category) => {
+    // Check if the category is in the selected categories list
+    const alreadySelected = selectedCategories.some(c => c.id === category.id);
+
+    if (alreadySelected) {
+      // If the category is already selected, remove it from the list
+      setSelectedCategories(selectedCategories.filter(c => c.id !== category.id));
+      // Add the category back to the available categories list
+      setAvailableCategories([...availableCategories, category]);
+    } else {
+      // If the category is not already selected, add it to the list
+      setSelectedCategories([...selectedCategories, category]);
+      // Remove the category from the available categories list
+      setAvailableCategories(availableCategories.filter(c => c.id !== category.id));
+    }
+  };
 
 
 
@@ -45,6 +70,7 @@ export default function Search() {
   const handleClear = () => {
     setValue("");
     setCurrentData([])
+    setCurrentRowIndex(-1)
 
   }
 
@@ -53,13 +79,17 @@ export default function Search() {
     setValue(searchTerm);
     searchForElement(searchTerm);
     setCurrentData([])
+    setCurrentRowIndex(-1)
     setValue("")
   };
+
+
 
   const observeGetCss = async () => {
     const codeExtractor = new CodeExtractor();
     let css = await codeExtractor.extractCss();
     setCssJson(codeExtractor.convertCssToJson(css));
+    // console.log(codeExtractor.convertCssToJsonV2(css), 'cssJson');
     setCss(css)
     console.log(cssJson, 'cssJson');
   }
@@ -137,12 +167,20 @@ export default function Search() {
   }
 
 
+
+
+
+
+
+
   useEffect(() => {
     tabEventLisenter().then(() => {
       console.log('tab event Handlers added');
       observeGetCss();
     })
+  }, [])
 
+  useEffect(() => {
     console.log(cssJson, 'cssJson');
 
   }, [cssJson])
@@ -156,8 +194,27 @@ export default function Search() {
 
   return (
     <>
-      <SearchBar onClear={handleClear} currentData={currentData} css={css} setCss={setCss} cssJson={cssJson} onChange={onChange} onSearch={onSearch} setValue={setValue} value={value}>
-      
+      <SearchBar
+        onClear={handleClear}
+        currentData={currentData}
+        css={css}
+        setCss={setCss}
+        cssJson={cssJson}
+        onChange={onChange}
+        onSearch={onSearch}
+        setValue={setValue}
+        setCurrentRowIndex={setCurrentRowIndex}
+        currentRowIndex={currentRowIndex}
+        value={value}
+        toggleCategory={toggleCategory}
+        selectedCategories={selectedCategories}
+        availableCategories={availableCategories}
+
+      >
+
+
+
+
       </SearchBar>
 
 

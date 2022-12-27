@@ -1,32 +1,17 @@
 import React, { useState } from 'react';
 
-const CategorySelector = () => {
+const Filter = ({selectedCategories,setSelectedCategories,availableCategories,setAvailableCategories, toggleCategory}) => {
   // Define the available categories and the selected categories as state variables
-  const [availableCategories, setAvailableCategories] = useState([
-    { id: 1, name: 'ATTACHMENTS' },
-    { id: 2, name: 'CSS' },
-    { id: 3, name: 'HTML' },
-    { id: 4, name: 'COMPONENTS' },
-  ]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  // const [availableCategories, setAvailableCategories] = useState([
+  //   { id: 1, name: 'ATTACHMENTS' },
+  //   { id: 2, name: 'CSS' },
+  //   { id: 3, name: 'HTML' },
+  //   { id: 4, name: 'COMPONENTS' },
+  // ]);
+  // const [selectedCategories, setSelectedCategories] = useState([]);
 
   // Define a method for adding or removing a category
-  const toggleCategory = (category) => {
-    // Check if the category is in the selected categories list
-    const alreadySelected = selectedCategories.some(c => c.id === category.id);
 
-    if (alreadySelected) {
-      // If the category is already selected, remove it from the list
-      setSelectedCategories(selectedCategories.filter(c => c.id !== category.id));
-      // Add the category back to the available categories list
-      setAvailableCategories([...availableCategories, category]);
-    } else {
-      // If the category is not already selected, add it to the list
-      setSelectedCategories([...selectedCategories, category]);
-      // Remove the category from the available categories list
-      setAvailableCategories(availableCategories.filter(c => c.id !== category.id));
-    }
-  };
 
   return (
     <div className="filter-container">
@@ -69,4 +54,4 @@ const CategorySelector = () => {
   );
 };
 
-export default CategorySelector;
+export default Filter;

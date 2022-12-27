@@ -37,9 +37,9 @@ const Newtab = () => {
 
     let cssString = cssParser.createCssString(css, classNames)
 
-    console.log(cssString, 'cssString');
+    // console.log(cssString, 'cssString');
 
-    console.log(cssParser.parseCssTree(css, 'modalcontainer'), 'cssString.parseCssTree(\'modalcontainer\')');
+    // console.log(cssParser.parseCssTree(css, 'modalcontainer'), 'cssString.parseCssTree(\'modalcontainer\')');
 
 
 
@@ -52,12 +52,37 @@ const Newtab = () => {
     console.log(mediaQueryArr, 'mediaQueryArr');
 
 
+
+    let keyFrameArr = cssParser.getKeyFrames(css);
+
+    console.log(keyFrameArr, 'keyFrameArr');
+
+    let animationsArr = cssParser.getAnimations(css);
+
+    console.log(animationsArr, 'animationsArr');
+
+    let elementWithId = cssParser.findElementById(css, 'no');
+
+    console.log(elementWithId, 'elementWithId');
+
+    let elementSelectors = cssParser.getSelectorDeclarations(css, '.modalcontainer', true);
+
+    console.log(elementSelectors, 'elementSelectors');
+
+
+
+
+
+
+
     let mediaQueryRel = cssParser.extractRelevantClasses(classNames, mediaQueryArr);
-    console.log(mediaQueryRel, 'mediaQueryRel');
+    // console.log(mediaQueryRel, 'mediaQueryRel');
 
     let mediaString = cssParser.createMediaComponent(mediaQueryRel);
 
-    console.log(mediaString, 'mediaString');
+
+
+    // console.log(mediaString, 'mediaString');
 
 
     let finalComponent = cssParser.createCssComponent(css, classNames, mediaQueryRel);
@@ -65,7 +90,7 @@ const Newtab = () => {
 
 
 
-    console.log(finalComponent, 'finalComponent');
+    // console.log(finalComponent, 'finalComponent');
 
 
 

@@ -1,5 +1,5 @@
 
-import { parse, walk, find, findAll, generate } from 'css-tree';
+import { parse, walk, find, findAll, parseValue, generate } from 'css-tree';
 import css from '../css.txt';
 
 
@@ -100,19 +100,101 @@ export default class CssParser {
         // console.log(node);
         // get the media query
         const mediaQuery = `@media ${generate(node.prelude)}`
-
         mediaQueries.push(generate(node))
-
       }
-
-
     });
-
     // console.log(mediaQueries, 'mediaQueries');
     return mediaQueries;
-
-
   }
+
+
+  getKeyFrames(css) {
+    const ast = parse(css);
+    const keyframes = [];
+
+    walk(ast, (node) => {
+      if (node.type === 'Atrule' && node.name === 'keyframes') {
+        // get the keyframes name
+        const keyframesName = `@keyframes ${generate(node.prelude)}`;
+        keyframes.push(generate(node));
+      }
+    });
+
+    return keyframes;
+  }
+
+  getAnimations(css) {
+    const ast = parse(css);
+    const animations = [];
+
+    walk(ast, (node) => {
+      if (node.type === 'Rule' && node.name === 'animation') {
+        animations.push(generate(node));
+      }
+    });
+
+    return animations;
+  }
+
+  findElementById(css, id) {
+    const ast = parse(css);
+    let element = null;
+
+    walk(ast, (node) => {
+      if (node.type === 'Rule' && node.prelude && node.prelude.type === 'SelectorList' && node.prelude.children && node.prelude.children.head && node.prelude.children.head.data && node.prelude.children.head.data.children && node.prelude.children.head.data.children.head) {
+        const idSelector = node.prelude.children.head.data.children.head.data;
+
+        if (idSelector.type === 'IdSelector' && idSelector.name === id) {
+          element = generate(node);
+        }
+      }
+    });
+
+    return element;
+  }
+
+
+
+  getSelectorDeclarations(css, selector, returnStylesheetFormat = false) {
+    const ast = parse(css);
+    let declarations = [];
+
+    walk(ast, (node) => {
+      if (node.type === 'Rule' && node.prelude && node.prelude.type === 'SelectorList' && node.block && node.block.children) {
+        node.prelude.children.forEach((sel) => {
+          if (sel.type === 'Selector' && generate(sel) === selector) {
+            // Extract all declarations for the specified selector
+            node.block.children.forEach((declaration) => {
+              // Use the generate function to get the string representation of the declaration
+              declarations.push(generate(declaration));
+            });
+          }
+        });
+      }
+    });
+
+    if (returnStylesheetFormat) {
+      // Return the declarations in a stylesheet format
+      return `${selector} {\n  ${declarations.join('\n  ')}\n}`;
+    } else {
+      return declarations;
+    }
+  }
+   
+
+  // prelude.children.head.data.children.head
+
+
+
+
+
+
+
+
+
+
+
+
 
   isEqualMediaQuery(mediaQuery1, mediaQuery2) {
     const parsedMediaQuery1 = this.parseMediaQuery(mediaQuery1);
@@ -162,7 +244,7 @@ export default class CssParser {
 
     return relevantClasses;
   }
-  
+
 
   createMediaComponent(relevantClassesObj) {
     let mediaString = '';
@@ -176,7 +258,7 @@ export default class CssParser {
           for (const classKey in elem) {
             if (elem.hasOwnProperty(classKey)) {
               const classValue = elem[classKey];
-              mediaString += classValue +'sdsd';
+              mediaString += classValue + 'sdsd';
             }
           }
         });

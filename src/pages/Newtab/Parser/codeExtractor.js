@@ -87,7 +87,66 @@ export default class CodeExtractor {
   }
 
 
-  
+
+
+   convertCssToJsonV2(css) {
+    // Create an empty object to store the parsed CSS
+    const parsedCSS = {};
+
+    // Split the CSS into individual lines
+    const lines = css.split('\n');
+
+    // Keep track of the current category (class or media query)
+    let currentCategory = null;
+
+    // Iterate through each line of the CSS
+    for (const line of lines) {
+      // Trim leading and trailing whitespace from the line
+      const trimmedLine = line.trim();
+
+      // Check if the line is a media query
+      if (trimmedLine.startsWith('@media')) {
+        // Extract the media query from the line
+        const mediaQuery = trimmedLine.substring('@media'.length).trim();
+
+        // Set the current category to the media query
+        currentCategory = mediaQuery;
+
+        // Initialize an empty object for the media query in the parsed CSS
+        parsedCSS[mediaQuery] = {};
+      } else if (trimmedLine.startsWith('.') || trimmedLine.startsWith('#')) {
+        // Extract the class or ID name from the line
+        const classOrID = trimmedLine.substring(1).split(' ')[0];
+
+        // Set the current category to the class or ID
+        currentCategory = classOrID;
+
+        // Initialize an empty object for the class or ID in the parsed CSS
+        parsedCSS[currentCategory] = {};
+      } else if (trimmedLine.includes(':')) {
+        // Split the line into property and value
+        const [property, value] = trimmedLine.split(':');
+
+        // Trim leading and trailing whitespace from the property and value
+        const trimmedProperty = property.trim();
+        const trimmedValue = value.trim();
+
+        // Add the property and value to the current category in the parsed CSS
+        parsedCSS[currentCategory][trimmedProperty] = trimmedValue;
+      }
+    }
+
+    // Return the parsed CSS in JSON format
+    return JSON.stringify(parsedCSS, null, 2);
+  }
+
+
+
+
+
+
+
+
 
 
 

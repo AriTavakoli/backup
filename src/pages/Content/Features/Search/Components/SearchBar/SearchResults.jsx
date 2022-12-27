@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function SearchResults({ cssJson, value, onSearch, currentData }) {
+export default function SearchResults({ cssJson, value, onSearch, currentData, currentRowIndex, setCurrentRowIndex }) {
   const [currentRow, setCurrentRow] = useState(-1);
   const dropdownRef = useRef(null);
 
@@ -14,16 +14,16 @@ export default function SearchResults({ cssJson, value, onSearch, currentData })
       switch (event.key) {
         case 'ArrowDown':
           event.preventDefault();
-          setCurrentRow((currentRow + 1) % currentData.length);
+          setCurrentRowIndex((currentRowIndex + 1) % currentData.length);
           break;
         case 'ArrowUp':
           event.preventDefault();
-          setCurrentRow((currentRow + currentData.length - 1) % currentData.length);
+          setCurrentRowIndex((currentRowIndex + currentData.length - 1) % currentData.length);
           break;
         case 'Enter':
           // Get the class name of the current row
           const rows = dropdownRef.current.querySelectorAll('.dropdown-row');
-          const className = rows[currentRow].innerText;
+          const className = rows[currentRowIndex].innerText;
           onSearch(className);
           break;
         default: break;
@@ -36,7 +36,7 @@ export default function SearchResults({ cssJson, value, onSearch, currentData })
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [currentRow, onSearch, currentData]);
+  }, [onSearch, currentData, currentRowIndex]);
 
   return (
     <div className="dropdown" style={{ zIndex: '499' }} ref={dropdownRef}>
@@ -45,7 +45,7 @@ export default function SearchResults({ cssJson, value, onSearch, currentData })
           {currentData.map((className, index) => (
             <div
               onClick={() => onSearch(className)}
-              className={`dropdown-row ${index === currentRow ? 'dropdown-row-selected' : ''}`}
+              className={`dropdown-row ${index === currentRowIndex ? 'dropdown-row-selected' : ''}`}
               key={className}
               onMouseEnter={() => setCurrentRow(index)}
               onMouseLeave={() => setCurrentRow(-1)}

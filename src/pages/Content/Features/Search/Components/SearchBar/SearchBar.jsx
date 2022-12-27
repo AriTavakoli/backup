@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Dropdown.css';
+import './Filter.css';
 import SearchResults from './SearchResults';
+import Filter from './Filter';
 
-export default function SearchBar({ onSearch, onClear, currentData, onChange, setValue, value, css, setCss, cssJson }) {
+export default function SearchBar({ onSearch, onClear, currentData, onChange, setValue, value, css, setCss, cssJson, setCurrentRowIndex, currentRowIndex, toggleCategory, setAvailableCategories, setSelectedCategories, selectedCategories, availableCategories, setCurrentData, setCssJson, setTab, tab}) {
 
 
   const [showResults, setShowResults] = useState(false)
+
+
+
   function handleKeyDown(event) {
     if (event.key === 'Enter') {
       setShowResults(true);
@@ -13,8 +18,8 @@ export default function SearchBar({ onSearch, onClear, currentData, onChange, se
   }
 
   return (
-    <div style={{ position: 'absolute', zIndex: '500', right: '5%', }}>
-      <div style={{ width: '100%', maxWidth: '600px', display: 'inline' }}>
+    <div style={{ position: 'absolute', zIndex: '500', right: '5%', width: '400px' }}>
+      <div style={{ width: '700px', maxWidth: '600px', display: 'inline' }}>
         <div style={{ display: 'flex', boxSizing: 'border-box', borderStyle: 'none', boxShadow: 'rgba(0, 0, 0, 0.24) 0px 2px 4px 0px, rgba(0, 0, 0, 0.24) 0px 4px 16px 0px', borderWidth: '1px', borderColor: 'rgb(33, 33, 33)', overflow: 'visible' }}>
           <div style={{ backgroundColor: 'rgb(64, 64, 64)', flex: '1 1 0%', }}>
             <div id='inputmain'
@@ -47,16 +52,34 @@ export default function SearchBar({ onSearch, onClear, currentData, onChange, se
       </div>
 
 
-      <div>
-      <div style = {{width: '100px', height: '100px', 'background': 'black'}}>
+
+      <div className="dropdown-container">
+
+        <Filter
+          cssJson={cssJson}
+          setCss={setCss}
+          css={css}
+          toggleCategory = {toggleCategory}
+          setAvailableCategories = {setAvailableCategories}
+          setSelectedCategories = {setSelectedCategories}
+          selectedCategories = {selectedCategories}
+          availableCategories = {availableCategories}
+
+           />
+
+        <SearchResults
+          currentRowIndex={currentRowIndex}
+          setCurrentRowIndex={setCurrentRowIndex}
+          handleKeyDown={handleKeyDown}
+          currentData={currentData}
+          cssJson={cssJson}
+          onSearch={onSearch}
+          value={value} />
+
+
+
 
       </div>
-      </div>
-
-
-
-     
-
 
 
     </div >
