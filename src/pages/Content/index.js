@@ -10,6 +10,7 @@ import { render } from 'react-dom';
 import logo from '../../assets/img/logo.svg';
 import SearchV2 from './Parser/search/searchv2';
 import CodeExtractor from './Parser/codeExtractor';
+import ExpandableMenu from './Features/ExpandMenu/ExpandableMenu';
 
 
 console.log('Content script works!');
@@ -21,6 +22,10 @@ printLine("Using the 'printLine' function from the Print Module");
 
 const App = () => {
 
+
+
+
+
   function exportEventListener() {
     const exportButton = document.querySelector('.bem-TopBar_Body_Button.bem-TopBar_Body_ExportButton')
 
@@ -30,18 +35,32 @@ const App = () => {
       setTimeout(() => {
 
         let tabBar = document.querySelectorAll('.kit-scrollbar')[1].children[0]
+        let codeBar = document.querySelectorAll('.kit-scrollbar')[1].children[1]
+        let codeDoc = document.querySelectorAll('.kit-scrollbar')[1]
+        let codeWindow = document.querySelectorAll('.kit-scrollbar')[1].children[1].children[1]
 
-        let tabButtons = tabBar.children;
-        console.log(tabButtons, 'tabButtons');
+        console.log(codeDoc, 'codeDoc');
 
+        let exportWindow = document.getElementsByClassName('--styled-hAngBs wf-16d2cwq')[0].children[0].children[0].children[0]
+
+        console.log(exportWindow, 'exportWindow');
+
+
+
+        codeDoc.style.height = '509px'
 
         // create a div element
-        const div = document.createElement('div');
+        const searchBarDiv = document.createElement('div');
+        const expandButtonDiv = document.createElement('div');
 
-        tabBar.appendChild(div);
+        tabBar.appendChild(searchBarDiv);
+        codeBar.appendChild(expandButtonDiv);
 
 
-        render(<Search />, div)
+
+
+        render(<Search />, searchBarDiv)
+        render(<ExpandableMenu codeWindow={codeWindow} codeBar={codeBar} codeDoc={codeDoc} exportWindow={exportWindow} />, expandButtonDiv)
 
       }, 200)
 
