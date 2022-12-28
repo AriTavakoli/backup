@@ -11,6 +11,8 @@ import logo from '../../assets/img/logo.svg';
 import SearchV2 from './Parser/search/searchv2';
 import CodeExtractor from './Parser/codeExtractor';
 import ExpandableMenu from './Features/ExpandMenu/ExpandableMenu';
+import CodeMirror from './Features/CodeMirror';
+import Resize from './Features/ExpandMenu/Resize';
 
 
 console.log('Content script works!');
@@ -22,54 +24,158 @@ printLine("Using the 'printLine' function from the Print Module");
 
 const App = () => {
 
+  function exportInit() {
+
+    let tabBar = document.querySelectorAll('.kit-scrollbar')[1].children[0]
+    let codeBar = document.querySelectorAll('.kit-scrollbar')[1].children[1] // ? width and heigh are adjustable for codespaces
+    let codeDocKitScrollBar = document.querySelectorAll('.kit-scrollbar')[1]
+    let codeWindow = document.querySelectorAll('.kit-scrollbar')[1].children[1].children[1]
+    let exportWindow = document.getElementsByClassName('--styled-hAngBs wf-16d2cwq')[0].children[0].children[0].children[0]
+    let kitWithArrows = codeBar.children[0];
+
+    console.log(codeDocKitScrollBar, 'codeDocKitScrollBar');
+    console.log(kitWithArrows, 'kitWithArrows');
+    console.log(codeBar, 'codebar');
+    console.log(codeWindow, 'codeWindow');
+    console.log(exportWindow, 'exportWindow');
 
 
 
 
-  function exportEventListener() {
+
+
+
+    codeBar.style.display = 'flex'
+    codeDocKitScrollBar.style.height = '509px'
+    kitWithArrows.children[0].style.display = 'flex';
+    kitWithArrows.style.maxWidth = 'fit-content'
+    // kitWithArrows.style.maxWidth = 'fit-content'
+    // kitWithArrows.style.position = 'relative'
+
+    // create a div element
+    const searchBarDiv = document.createElement('div');
+    const expandButtonDiv = document.createElement('div');
+    const resizerDiv = document.createElement('div');
+    const codeMirrorDiv = document.createElement('div');
+
+    resizerDiv.style.display = 'flex';
+    codeMirrorDiv.style.display = 'flex';
+    codeMirrorDiv.style.flexGrow = '1';
+    codeMirrorDiv.style.flexShrink = '1';
+    codeMirrorDiv.style.flexBasis = '0%';
+    codeMirrorDiv.style.minWidth = '0px';
+
+
+
+
+    console.log(resizerDiv, 'resizerDiv');
+
+
+
+    tabBar.appendChild(searchBarDiv);
+    codeBar.appendChild(expandButtonDiv);
+    kitWithArrows.prepend(resizerDiv);
+    codeBar.appendChild(codeMirrorDiv);
+
+
+
+
+    // render(<Search />, searchBarDiv)
+    render(
+      <ExpandableMenu
+        codeWindow={codeWindow}
+        codeBar={codeBar}
+        codeDoc={codeDocKitScrollBar}
+        exportWindow={exportWindow}
+      />,
+      expandButtonDiv
+    )
+    render(<Resize element={kitWithArrows} />, resizerDiv)
+
+    render(<CodeMirror codeWindow={codeWindow} />, codeMirrorDiv)
+
+
+
+  }
+
+
+
+
+
+  async function exportEventListener() {
     const exportButton = document.querySelector('.bem-TopBar_Body_Button.bem-TopBar_Body_ExportButton')
 
-    exportButton.addEventListener('click', () => {
+
+
+    // 1. ) add event listener to export button
+    // 2. ) when clicked, add search bar to codeWindow
+
+
+
+    exportButton.addEventListener('click', async () => {
       console.log('clicked')
 
-      setTimeout(() => {
 
-        let tabBar = document.querySelectorAll('.kit-scrollbar')[1].children[0]
-        let codeBar = document.querySelectorAll('.kit-scrollbar')[1].children[1]
-        let codeDoc = document.querySelectorAll('.kit-scrollbar')[1]
-        let codeWindow = document.querySelectorAll('.kit-scrollbar')[1].children[1].children[1]
+      const codeExtractor = new CodeExtractor();
+      const init = await codeExtractor.mutationObserverElementWithSelector('code')
 
-        console.log(codeDoc, 'codeDoc');
-
-        let exportWindow = document.getElementsByClassName('--styled-hAngBs wf-16d2cwq')[0].children[0].children[0].children[0]
-
-        console.log(exportWindow, 'exportWindow');
+      exportInit()
 
 
+      // .div-block-8 {
+      //   flex-grow: 1;
+      //   flex-shrink: 1;
+      //   flex-basis: 0%;
+      // }
 
-        codeDoc.style.height = '509px'
+      //   setTimeout(() => {
 
-        // create a div element
-        const searchBarDiv = document.createElement('div');
-        const expandButtonDiv = document.createElement('div');
+      //     let tabBar = document.querySelectorAll('.kit-scrollbar')[1].children[0]
+      //     let codeBar = document.querySelectorAll('.kit-scrollbar')[1].children[1]
 
-        tabBar.appendChild(searchBarDiv);
-        codeBar.appendChild(expandButtonDiv);
+
+      //     let codeDoc = document.querySelectorAll('.kit-scrollbar')[1]
+      //     let codeWindow = document.querySelectorAll('.kit-scrollbar')[1].children[1].children[1]
 
 
 
 
-        render(<Search />, searchBarDiv)
-        render(<ExpandableMenu codeWindow={codeWindow} codeBar={codeBar} codeDoc={codeDoc} exportWindow={exportWindow} />, expandButtonDiv)
 
-      }, 200)
+
+
+      //     console.log(codeDoc, 'codeDoc');
+
+      //     console.log(codeBar, 'codebar');
+
+      //     let exportWindow = document.getElementsByClassName('--styled-hAngBs wf-16d2cwq')[0].children[0].children[0].children[0]
+
+
+
+
+
+      //     console.log(exportWindow, 'exportWindow');
+
+
+
+      //     codeDoc.style.height = '509px'
+
+      //     // create a div element
+      //     const searchBarDiv = document.createElement('div');
+      //     const expandButtonDiv = document.createElement('div');
+
+      //     tabBar.appendChild(searchBarDiv);
+      //     codeBar.appendChild(expandButtonDiv);
+
+
+
+
+      //     render(<Search />, searchBarDiv)
+      //     render(<ExpandableMenu codeWindow={codeWindow} codeBar={codeBar} codeDoc={codeDoc} exportWindow={exportWindow} />, expandButtonDiv)
+
+      //   }, 200)
 
     })
 
-    return new Promise((resolve, reject) => {
-      resolve('resolved')
-    }
-    )
 
   }
 

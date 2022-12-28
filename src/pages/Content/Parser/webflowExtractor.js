@@ -74,6 +74,71 @@ export default class WebflowExtractor {
     });
   }
 
+  waitForDomElementQueryAll(selector, index) {
+
+
+    console.log(`Waiting for element: ${selector} -- invoked by waitForDomElement()`);
+    console.log(document.querySelectorAll(selector)[index]);
+
+    return new Promise(resolve => {
+
+      let element = document.querySelectorAll(selector)[index];
+
+      if (element) {
+        console.log(`Already Exists: ${element} -- invoked by waitForDomElement()`);
+
+        return resolve(element);
+
+      }
+
+      const observer = new MutationObserver(mutations => {
+        if (element) {
+          console.log(`Found element: ${element} -- invoked by waitForDomElement()`);
+          resolve(element);
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+  }
+  waitForCodeWindow() {
+
+
+
+    return new Promise(resolve => {
+
+      let element = document.querySelectorAll('.kit-scrollbar')[1].children[1].children[1]
+
+      if (element) {
+        console.log(`Already Exists: ${element} -- invoked by waitForDomElement()`);
+
+        return resolve(element);
+
+      }
+
+      const observer = new MutationObserver(mutations => {
+        if (element) {
+          console.log(`Found element: ${element} -- invoked by waitForDomElement()`);
+          resolve(element);
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+  }
+
+
+
+
+
 
 
   waitForDomElementExportTab(selector) {
@@ -131,6 +196,12 @@ export default class WebflowExtractor {
       });
     });
   }
+
+
+
+
+
+
 
 
 

@@ -14,12 +14,23 @@ export default function ExpandableMenu({exportWindow, codeWindow, codeBar, codeD
     codeDoc.style.transition = 'height 0.5s ease-in-out, width 0.5s ease-in-out';
     codeDoc.style.height = isExpanded ? '510px' : '800px';
     codeDoc.style.width = isExpanded ? '640px' : '1200px';
+
     exportWindow.style.transition = 'height 0.5s ease-in-out, width 0.5s ease-in-out';
     exportWindow.style.height = isExpanded ? '510px' : '800px';
     exportWindow.style.width = isExpanded ? '640px' : '1200px';
+
     codeBar.style.transition = 'height 0.5s ease-in-out, width 0.5s ease-in-out';
     codeBar.style.height = isExpanded ? '' : '611px';
+
+
+
+    
     codeWindow.style.transition = 'height 0.5s ease-in-out, width 0.5s ease-in-out';
+
+
+
+
+
     console.log(codeWindow.style);
     codeWindow.style.height = isExpanded ? '' : '611px';
     console.log('%cCode window style:', 'color: blue');

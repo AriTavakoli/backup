@@ -180,7 +180,35 @@ export default class CssParser {
       return declarations;
     }
   }
-   
+
+
+   getSelectorDeclarationsV2(css, selector) {
+  const ast = parse(css);
+  const declarations = [];
+
+  function traverse(node) {
+    if (node.type === 'Rule' && node.prelude && node.prelude.type === 'SelectorList' && node.block && node.block.children) {
+      node.prelude.children.forEach((sel) => {
+        if (sel.type === 'Selector' && generate(sel) === selector) {
+          // Extract all declarations for the specified selector
+          node.block.children.forEach((declaration) => {
+            // Use the generate function to get the string representation of the declaration
+            declarations.push(generate(declaration));
+          });
+        }
+      });
+    }
+
+    // Recursively traverse the children nodes
+    if (node.children) {
+      node.children.forEach((child) => traverse(child));
+    }
+  }
+
+  traverse(ast);
+
+  return declarations;
+}
 
   // prelude.children.head.data.children.head
 

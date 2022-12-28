@@ -22,10 +22,11 @@ const Newtab = () => {
 
     const htmlParser = new HtmlParser(htmlFile);
 
-    let parsed = htmlParser.getAllChildren('modalcontainer');
+    const parsed = htmlParser.getAllChildren('modalcontainer');
 
-    let classNames = htmlParser.getClassNames('modalcontainer')
+    const classNames = htmlParser.getClassNames('modalcontainer')
 
+    console.log(htmlParser.printObjectTree(parsed, '', true ,true ));
     console.log(parsed, 'parsed');
 
 
@@ -35,7 +36,7 @@ const Newtab = () => {
 
 
 
-    let cssString = cssParser.createCssString(css, classNames)
+    const cssString = cssParser.createCssString(css, classNames)
 
     // console.log(cssString, 'cssString');
 
@@ -65,9 +66,15 @@ const Newtab = () => {
 
     console.log(elementWithId, 'elementWithId');
 
-    let elementSelectors = cssParser.getSelectorDeclarations(css, '.modalcontainer', true);
+    let elementSelectors = cssParser.getSelectorDeclarations(css, '#bar', true);
 
     console.log(elementSelectors, 'elementSelectors');
+
+
+
+    let elementSelectorsV2 = cssParser.getSelectorDeclarationsV2(css, '.modalcontainer',);
+
+    console.log(elementSelectorsV2, 'elementSelectorsV2');
 
 
 
