@@ -1,6 +1,8 @@
 import React from 'react';
-import { getDragClass } from './util';
-const getResizeDirection = require('./ResizeDirection');
+const getResizeDirection = require('./util/getResizeDirection');
+const updateResizeState = require('./util/updateResizeState');
+const updateCursorState = require('./util/updateCursorState');
+
 
 export default class DraggableV2 extends React.Component {
 
@@ -47,43 +49,9 @@ export default class DraggableV2 extends React.Component {
   }
 
   handleMouseOver = ({ clientX, clientY }) => {
-    switch (true) {
 
-      case Math.abs(this.ref.current.getBoundingClientRect().left - clientX) <= 15:
-        console.log('left');
-        this.setState(prevState => ({
-          ...prevState,
-          cursor: 'w-resize',
-        }))
-        return;
-      case Math.abs(this.ref.current.getBoundingClientRect().right - clientX) <= 15:
-        console.log('right');
-        this.setState(prevState => ({
-          ...prevState,
-          cursor: 'w-resize',
-        }))
-        return
+    this.setState(prevState => updateCursorState(this.ref, clientX, clientY));
 
-      case Math.abs(this.ref.current.getBoundingClientRect().bottom - clientY) <= 15:
-        console.log('bottom');
-        this.setState(prevState => ({
-          ...prevState,
-          cursor: 'ns-resize',
-        }))
-        return;
-      default:
-        this.setState(prevState => ({
-          ...prevState,
-          cursor: 'grab',
-        }))
-    }
-  }
-
-  handleMouseOut = () => {
-    this.setState({
-      ...this.state,
-      cursor: 'default'
-    })
   }
 
 
@@ -92,39 +60,6 @@ export default class DraggableV2 extends React.Component {
     window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('mouseup', this.handleMouseUp);
 
-    //TODO::
-
-    console.log();
-    // if (Math.abs(this.ref.current.getBoundingClientRect().left - clientX) <= 15 &&
-    //   Math.abs(this.ref.current.getBoundingClientRect().bottom - clientY) <= 15) {
-    //   this.setState({
-    //     ...this.state,
-    //     isDragging: false,
-    //     isResizing: true,
-    //     resize: {
-    //       left: true,
-    //       bottom: true,
-    //     }
-    //   })
-    //   return;
-    // }
-
-    // if (Math.abs(this.ref.current.getBoundingClientRect().right - clientX) <= 15 &&
-    //   Math.abs(this.ref.current.getBoundingClientRect().bottom - clientY) <= 15) {
-    //   this.setState({
-    //     ...this.state,
-    //     isDragging: false,
-    //     isResizing: true,
-    //     resize: {
-    //       right: true,
-    //       bottom: true,
-    //     }
-    //   })
-    //   return;
-    // }
-
-
-
     const resizeDirection = getResizeDirection(this.ref, clientX, clientY);
 
     this.setState({
@@ -132,7 +67,6 @@ export default class DraggableV2 extends React.Component {
       isResizing: resizeDirection.isResizing,
       resize: resizeDirection.resize,
     });
-
 
 
 
@@ -165,104 +99,32 @@ export default class DraggableV2 extends React.Component {
 
     if (isResizing) {
 
-      switch (true) {
+      this.setState(prevState => updateResizeState(this.ref, clientX, clientY, movementX, movementY, prevState, ratio, prevState.aspectRatio, prevState.aspectRatioDimensions));
+      return;
 
-        case left && bottom:
-
-          if (aspectRatio) {
-            console.log('left bottom');
-            this.setState(prevState => ({
-              ...prevState,
-              cursor: 'w-resize',
-              width: prevState.width - (clientX - this.ref.current.getBoundingClientRect().left),
-              translateX: prevState.translateX + (clientX - this.ref.current.getBoundingClientRect().left),
-              height: prevState.width - (clientX - this.ref.current.getBoundingClientRect().left) * aspectRatioDimensions
-            }))
-            return;
-          } else {
-            console.log('left bottom');
-            this.setState(prevState => ({
-              ...prevState,
-              cursor: 'w-resize',
-              width: prevState.width - (clientX - this.ref.current.getBoundingClientRect().left),
-              translateX: prevState.translateX + (clientX - this.ref.current.getBoundingClientRect().left),
-              height: prevState.height + movementY / ratio
-            }))
-          }
-          return;
-        case right && bottom:
-          console.log('right bottom');
-          if (aspectRatio) {
-            this.setState(prevState => ({
-              ...prevState,
-              cursor: 'w-resize',
-              width: prevState.width + movementX / ratio,
-              height: prevState.width + movementX / ratio * aspectRatioDimensions
-            }))
-          } else {
-            this.setState(prevState => ({
-              ...prevState,
-              cursor: 'w-resize',
-              width: prevState.width + movementX / ratio,
-              height: prevState.height + movementY / ratio
-            }))
-          }
-          return;
-        case left:
-          console.log('left');
-          this.setState(prevState => ({
-            ...prevState,
-            cursor: 'w-resize',
-            width: prevState.width - (clientX - this.ref.current.getBoundingClientRect().left),
-            translateX: prevState.translateX + (clientX - this.ref.current.getBoundingClientRect().left)
-          }))
-          return;
-
-        case right:
-          console.log('right');
-          this.setState(prevState => ({
-            ...prevState,
-            cursor: 'w-resize',
-            width: prevState.width + movementX / ratio
-          }))
-          return
-
-        case bottom:
-          console.log('bottom');
-          this.setState(prevState => ({
-            ...prevState,
-            cursor: 'ns-resize',
-            height: prevState.height + movementY / ratio
-          }))
-          return;
-
-        default:
-          console.log('default');
-      }
     }
-
-
-
 
     if (!isDragging) {
       return;
     }
 
 
+    if (isDragging) {
+      this.setState(prevState => ({
+        translateX: clientX - prevState.originalX + prevState.lastTranslateX,
+        translateY: clientY - prevState.originalY + prevState.lastTranslateY
 
-    this.setState(prevState => ({
-      translateX: clientX - prevState.originalX + prevState.lastTranslateX,
-      translateY: clientY - prevState.originalY + prevState.lastTranslateY
+      }), () => {
+        if (onDrag) {
+          onDrag({
+            translateX: this.state.translateX,
+            translateY: this.state.translateY
+          });
+        }
+      });
+    };
 
-    }), () => {
-      if (onDrag) {
-        onDrag({
-          translateX: this.state.translateX,
-          translateY: this.state.translateY
-        });
-      }
-    });
-  };
+  }
 
   handleMouseUp = () => {
     window.removeEventListener('mousemove', this.handleMouseMove);
