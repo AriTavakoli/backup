@@ -11,8 +11,10 @@ import logo from '../../assets/img/logo.svg';
 import SearchV2 from './Parser/search/searchv2';
 import CodeExtractor from './Parser/codeExtractor';
 import ExpandableMenu from './Features/ExpandMenu/ExpandableMenu';
-import CodeMirror from './Features/CodeMirror';
 import Resize from './Features/ExpandMenu/Resize';
+import CodeEditor from './Features/CodeEditor/CodeEditor';
+import Panel from './Features/CodeEditor/Panel/Panel';
+import DraggablePanel from './Features/CodeEditor/PanelV2/index';
 
 
 console.log('Content script works!');
@@ -78,8 +80,6 @@ const App = () => {
     codeBar.appendChild(codeMirrorDiv);
 
 
-
-
     // render(<Search />, searchBarDiv)
     render(
       <ExpandableMenu
@@ -92,7 +92,9 @@ const App = () => {
     )
     render(<Resize element={kitWithArrows} />, resizerDiv)
 
-    render(<CodeMirror codeWindow={codeWindow} />, codeMirrorDiv)
+    render(<CodeEditor />, codeMirrorDiv)
+
+
 
 
 
@@ -315,6 +317,8 @@ const App = () => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <h1>Export code</h1>
+      {/* <Panel></Panel>
+      <DraggablePanel></DraggablePanel> */}
       <button onClick={() => { exporter(); getComponent(); }}>Get Elements</button>
     </div>
   );

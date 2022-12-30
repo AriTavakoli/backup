@@ -23,6 +23,8 @@ function Resize({ element, }) {
       x = event.clientX;
       width = width + dx;
 
+
+
       // Check if the new width exceeds the maximum allowed width
       if (width > maxWidth) {
         width = maxWidth;
@@ -34,12 +36,19 @@ function Resize({ element, }) {
 
     const onMouseUpRightResize = (event) => {
       document.removeEventListener("mousemove", onMouseMoveRightResize);
+
+
+
+
     };
 
     const onMouseDownRightResize = (event) => {
       x = event.clientX;
       resizeableEle.style.left = styles.left;
       resizeableEle.style.right = null;
+      //!!!
+      element.style.pointerEvents = "none";
+
       document.addEventListener("mousemove", onMouseMoveRightResize);
       document.addEventListener("mouseup", onMouseUpRightResize);
     };

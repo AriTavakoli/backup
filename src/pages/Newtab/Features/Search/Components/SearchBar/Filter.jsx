@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Filter = ({selectedCategories,setSelectedCategories,availableCategories,setAvailableCategories, toggleCategory}) => {
   // Define the available categories and the selected categories as state variables
@@ -18,7 +18,7 @@ const Filter = ({selectedCategories,setSelectedCategories,availableCategories,se
       {/* Display the selected categories */}
       <div className="filter-selected">
         {selectedCategories.map(category => (
-          <div key={category.id} className="filter-button" onClick={() => toggleCategory(category)}>
+          <div key={category.id} className="filter-button" onClick={() => toggleCategory(category)}> 
 
 
 

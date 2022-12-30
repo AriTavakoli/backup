@@ -1,0 +1,23 @@
+.panel-css {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  width: 200px;
+  height: 200px;
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+.panel__container-css {
+  height: 100%;
+  position: relative;
+}
+
+.panel__header-css {
+  padding: 4px;
+  background-color: #e2e0e0;
+}
+
+.panel__content-css {
+  padding: 4px;
+}

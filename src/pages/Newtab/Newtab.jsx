@@ -6,9 +6,12 @@ import CssParser from './Parser/cssParser';
 import HtmlParser from './Parser/htmlParser';
 import WebflowExtractor from './Parser/webflowExtractor';
 import Search from './Features/Search/Search';
-
+import Video from './Features/Pic/components/Video';
+import Panel from './Panel/Panel.js';
 import htmlFile from './test.html';
 import css from './css.txt'
+import Draggable from './Draggable/Draggable'
+import DraggableV2 from './DragClass/DraggableV2.js'
 
 const Newtab = () => {
 
@@ -26,7 +29,7 @@ const Newtab = () => {
 
     const classNames = htmlParser.getClassNames('modalcontainer')
 
-    console.log(htmlParser.printObjectTree(parsed, '', true ,true ));
+    console.log(htmlParser.printObjectTree(parsed, '', true, true));
     console.log(parsed, 'parsed');
 
 
@@ -126,9 +129,19 @@ const Newtab = () => {
   return (
 
     <>
-      <button onClick={() => { getStyles() }}>Get Elements</button>
+      <div style={{ height: '200vh' }}>
 
-      <Search> </Search>
+
+        <button onClick={() => { getStyles() }}>Get Elements</button>
+        {/* <Panel />
+      <Search> </Search> */}
+        {/* <Draggable></Draggable> */}
+        <DraggableV2>
+
+        </DraggableV2>
+
+
+      </div>
     </>
   )
 
