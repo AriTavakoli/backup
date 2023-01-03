@@ -1,6 +1,6 @@
 import React from 'react';
-import ShareLargeIcon from './ShareLargeicon';
-import CrossLargeIcon from './CrossLargeIcon';
+import ShareLargeIcon from '../../ShareLargeicon';
+import CrossLargeIcon from '../../CrossLargeIcon';
 const getResizeDirection = require('./util/getResizeDirection');
 const updateResizeState = require('./util/updateResizeState');
 const updateCursorState = require('./util/updateCursorState');
@@ -53,14 +53,12 @@ export default class DraggableV2 extends React.Component {
 
     this.handleWindowState = this.handleWindowState.bind(this);
 
-
   }
 
-  handleWindowState = () => {
+  handleWindowState = (e) => {
     console.log('handleWindowState');
-    console.log('asdasdasdasdasdasd');
+    e.preventDefault();
     this.setState({ windowed: !this.state.windowed });
-
   }
 
 
@@ -128,7 +126,7 @@ export default class DraggableV2 extends React.Component {
 
     }));
 
-
+    // this.ref.current.style.pointerEvents = 'none';
 
 
 
@@ -141,10 +139,8 @@ export default class DraggableV2 extends React.Component {
     const { aspectRatio, aspectRatioDimensions } = this.state;
 
     // console.log(this.ref.current.style);
+
     const ratio = window.devicePixelRatio;
-
-
-    // this.ref.current.style.pointerEvents = 'none';
 
     if (isResizing) {
 
@@ -200,7 +196,7 @@ export default class DraggableV2 extends React.Component {
 
 
     try {
-      this.ref.current.style.pointerEvents = 'auto';
+      // this.ref.current.style.pointerEvents = 'auto';
     } catch (e) {
       console.log(e);
     }
@@ -217,11 +213,15 @@ export default class DraggableV2 extends React.Component {
 
     return (
       <>
+
+
+
         <div
           ref={this.ref}
           onMouseDown={this.handleMouseDown}
           onMouseOver={this.handleMouseOver}
           onMouseOut={this.handleMouseOut}
+
           style={{
             backgroundColor: 'rgb(64,64,64)',
             width: `${width}px`,
@@ -229,37 +229,27 @@ export default class DraggableV2 extends React.Component {
             cursor: `${cursor}`,
             transform: `translate(${translateX}px, ${translateY}px)`,
             opacity: isDragging ? 0.8 : 1,
-            position: 'relative',
+            position: 'fixed',
             display: 'flex',
             flexDirection: 'column',
-            minWidth: '100px',
-            minHeight: '100px',
             alignItems: 'center',
             justifyContent: 'space-between',
-            // pointerEvents: window ? 'auto' : 'none',
+            pointerEvents: window ? 'auto' : 'none',
+
+
           }}
         >
 
-          <div className="parent" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', backgroundColor: 'rgb(43,43,43)', paddingRight: '10px'}}>
-            <div style ={{}}></div>
+          <button onClick={() => { this.handleWindowState.bind(this) }} style={{ display: 'flex', justifyContent: 'right', width: '100%', zIndex: '50000000' }}>
 
-            <div className="holder" style={{  height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center',  }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"></path></svg>
-            </div>
+            {window ? 'no' : 'nyes'}
+          </button>
 
-            <div onClick={this.handleWindowState} style={{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'column' }}>
-              {this.state.windowed ? (
-                <CrossLargeIcon></CrossLargeIcon>
-              ) : (
-                <ShareLargeIcon></ShareLargeIcon>
-              )}
-            </div>
+
+
+          <div className="asd" style={{ width: '100%', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgb(43,43,43)' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"></path></svg>
           </div>
-
-
-
-
-
 
           {children}
 

@@ -6,7 +6,7 @@ export default function iFrame() {
 
   return (
     <div>
-      
+
     </div>
   )
 
