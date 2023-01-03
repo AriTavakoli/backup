@@ -42,9 +42,7 @@ function CodeEditor() {
         />
 
       </div>
-      <div className="pane">
-        <div className="Iexist"> sdsdsdsd </div>
-
+      <div className="pane" style={{ position: 'relative' }}>
 
         <DraggableV2>
 
@@ -53,8 +51,8 @@ function CodeEditor() {
             title="output"
             sandbox="allow-scripts"
             frameBorder="0"
-            width="50%"
-            height="50%"
+            width="80%"
+            height="80%"
           />
 
         </DraggableV2>

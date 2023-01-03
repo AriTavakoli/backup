@@ -3,6 +3,7 @@ const getResizeDirection = require('./util/getResizeDirection');
 const updateResizeState = require('./util/updateResizeState');
 const updateCursorState = require('./util/updateCursorState');
 
+// console log
 
 export default class DraggableV2 extends React.Component {
 
@@ -43,6 +44,14 @@ export default class DraggableV2 extends React.Component {
     };
   }
 
+
+  componentDidMount() {
+
+    window.addEventListener('mousemove', this.handleMouseOver);
+    window.addEventListener('mousedown', this.handleMouseDown);
+  }
+
+
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.handleMouseMove);
     window.removeEventListener('mouseup', this.handleMouseUp);
@@ -60,6 +69,9 @@ export default class DraggableV2 extends React.Component {
     window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('mouseup', this.handleMouseUp);
 
+
+    
+
     const resizeDirection = getResizeDirection(this.ref, clientX, clientY);
 
     this.setState({
@@ -67,6 +79,8 @@ export default class DraggableV2 extends React.Component {
       isResizing: resizeDirection.isResizing,
       resize: resizeDirection.resize,
     });
+
+
 
 
 
@@ -89,7 +103,7 @@ export default class DraggableV2 extends React.Component {
   handleMouseMove = ({ clientX, clientY, movementX, movementY }) => {
     const { isDragging, isResizing } = this.state;
     const { onDrag } = this.props;
-    const { left, right, bottom } = this.state.resize;
+    const { left, right, bottom, top } = this.state.resize;
     const { aspectRatio, aspectRatioDimensions } = this.state;
     console.log('movementX', movementX);
 

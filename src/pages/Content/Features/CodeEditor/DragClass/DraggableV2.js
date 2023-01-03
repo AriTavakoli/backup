@@ -1,6 +1,10 @@
 import React from 'react';
-import { getDragClass } from './util';
-const getResizeDirection = require('./ResizeDirection');
+import ShareLargeIcon from '../../ShareLargeicon';
+const getResizeDirection = require('./util/getResizeDirection');
+const updateResizeState = require('./util/updateResizeState');
+const updateCursorState = require('./util/updateCursorState');
+
+
 
 export default class DraggableV2 extends React.Component {
 
@@ -9,7 +13,13 @@ export default class DraggableV2 extends React.Component {
 
     this.ref = React.createRef(null);
 
+
+
     this.state = {
+
+
+      windowed: false,
+
       isDragging: false,
       isResizing: false,
 
@@ -23,7 +33,11 @@ export default class DraggableV2 extends React.Component {
         left: false,
         right: false,
         top: false,
-        bottom: false
+        bottom: false,
+        topleft: false,
+        topright: false,
+        bottomleft: false,
+        bottomright: false,
       },
 
       originalX: 0,
@@ -35,11 +49,19 @@ export default class DraggableV2 extends React.Component {
       lastTranslateX: 0,
       lastTranslateY: 0,
 
-      width: 50,
-      height: 50,
+      width: 250,
+      height: 250,
 
     };
   }
+
+
+  componentDidMount() {
+
+    window.addEventListener('mousemove', this.handleMouseOver);
+    window.addEventListener('mousedown', this.handleMouseDown);
+  }
+
 
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.handleMouseMove);
@@ -47,81 +69,32 @@ export default class DraggableV2 extends React.Component {
   }
 
   handleMouseOver = ({ clientX, clientY }) => {
-    switch (true) {
 
-      case Math.abs(this.ref.current.getBoundingClientRect().left - clientX) <= 15:
-        console.log('left');
-        this.setState(prevState => ({
-          ...prevState,
-          cursor: 'w-resize',
-        }))
-        return;
-      case Math.abs(this.ref.current.getBoundingClientRect().right - clientX) <= 15:
-        console.log('right');
-        this.setState(prevState => ({
-          ...prevState,
-          cursor: 'w-resize',
-        }))
-        return
+    this.setState(prevState => updateCursorState(this.ref, clientX, clientY));
 
-      case Math.abs(this.ref.current.getBoundingClientRect().bottom - clientY) <= 15:
-        console.log('bottom');
-        this.setState(prevState => ({
-          ...prevState,
-          cursor: 'ns-resize',
-        }))
-        return;
-      default:
-        this.setState(prevState => ({
-          ...prevState,
-          cursor: 'grab',
-        }))
-    }
-  }
-
-  handleMouseOut = () => {
-    this.setState({
-      ...this.state,
-      cursor: 'default'
-    })
   }
 
 
 
   handleMouseDown = ({ clientX, clientY }) => {
+
     window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('mouseup', this.handleMouseUp);
 
-    //TODO::
+    const boundingRect = this.ref.current.getBoundingClientRect();
 
-    console.log();
-    // if (Math.abs(this.ref.current.getBoundingClientRect().left - clientX) <= 15 &&
-    //   Math.abs(this.ref.current.getBoundingClientRect().bottom - clientY) <= 15) {
-    //   this.setState({
-    //     ...this.state,
-    //     isDragging: false,
-    //     isResizing: true,
-    //     resize: {
-    //       left: true,
-    //       bottom: true,
-    //     }
-    //   })
-    //   return;
-    // }
 
-    // if (Math.abs(this.ref.current.getBoundingClientRect().right - clientX) <= 15 &&
-    //   Math.abs(this.ref.current.getBoundingClientRect().bottom - clientY) <= 15) {
-    //   this.setState({
-    //     ...this.state,
-    //     isDragging: false,
-    //     isResizing: true,
-    //     resize: {
-    //       right: true,
-    //       bottom: true,
-    //     }
-    //   })
-    //   return;
-    // }
+
+
+    this.ref.current.style.pointerEvents = 'none';
+
+
+
+    //check if the current ClientX and ClientY are within the bounds of the element
+    if (!(clientX > boundingRect.left && clientX < boundingRect.right && clientY > boundingRect.top && clientY < boundingRect.bottom)) {
+      return;
+    }
+
 
 
 
@@ -133,6 +106,7 @@ export default class DraggableV2 extends React.Component {
       resize: resizeDirection.resize,
     });
 
+    // this.ref.current.style.position = 'absolute';
 
 
 
@@ -152,122 +126,59 @@ export default class DraggableV2 extends React.Component {
 
   };
 
+
+
+
+  handleWindowState = (e) => {
+    e.preventDefault();
+    this.setState(prevState => ({
+      windowed: !prevState.windowed
+    }));
+  }
+
+
   handleMouseMove = ({ clientX, clientY, movementX, movementY }) => {
     const { isDragging, isResizing } = this.state;
     const { onDrag } = this.props;
-    const { left, right, bottom } = this.state.resize;
+    const { left, right, bottom, top } = this.state.resize;
     const { aspectRatio, aspectRatioDimensions } = this.state;
-    console.log('movementX', movementX);
 
-
+    // console.log(this.ref.current.style);
 
     const ratio = window.devicePixelRatio;
 
     if (isResizing) {
 
-      switch (true) {
+      this.setState(prevState => updateResizeState(this.ref, clientX, clientY, movementX, movementY, prevState, ratio, prevState.aspectRatio, prevState.aspectRatioDimensions));
+      return;
 
-        case left && bottom:
-
-          if (aspectRatio) {
-            console.log('left bottom');
-            this.setState(prevState => ({
-              ...prevState,
-              cursor: 'w-resize',
-              width: prevState.width - (clientX - this.ref.current.getBoundingClientRect().left),
-              translateX: prevState.translateX + (clientX - this.ref.current.getBoundingClientRect().left),
-              height: prevState.width - (clientX - this.ref.current.getBoundingClientRect().left) * aspectRatioDimensions
-            }))
-            return;
-          } else {
-            console.log('left bottom');
-            this.setState(prevState => ({
-              ...prevState,
-              cursor: 'w-resize',
-              width: prevState.width - (clientX - this.ref.current.getBoundingClientRect().left),
-              translateX: prevState.translateX + (clientX - this.ref.current.getBoundingClientRect().left),
-              height: prevState.height + movementY / ratio
-            }))
-          }
-          return;
-        case right && bottom:
-          console.log('right bottom');
-          if (aspectRatio) {
-            this.setState(prevState => ({
-              ...prevState,
-              cursor: 'w-resize',
-              width: prevState.width + movementX / ratio,
-              height: prevState.width + movementX / ratio * aspectRatioDimensions
-            }))
-          } else {
-            this.setState(prevState => ({
-              ...prevState,
-              cursor: 'w-resize',
-              width: prevState.width + movementX / ratio,
-              height: prevState.height + movementY / ratio
-            }))
-          }
-          return;
-        case left:
-          console.log('left');
-          this.setState(prevState => ({
-            ...prevState,
-            cursor: 'w-resize',
-            width: prevState.width - (clientX - this.ref.current.getBoundingClientRect().left),
-            translateX: prevState.translateX + (clientX - this.ref.current.getBoundingClientRect().left)
-          }))
-          return;
-
-        case right:
-          console.log('right');
-          this.setState(prevState => ({
-            ...prevState,
-            cursor: 'w-resize',
-            width: prevState.width + movementX / ratio
-          }))
-          return
-
-        case bottom:
-          console.log('bottom');
-          this.setState(prevState => ({
-            ...prevState,
-            cursor: 'ns-resize',
-            height: prevState.height + movementY / ratio
-          }))
-          return;
-
-        default:
-          console.log('default');
-      }
     }
-
-
-
 
     if (!isDragging) {
       return;
     }
 
 
+    if (isDragging) {
+      this.setState(prevState => ({
+        translateX: clientX - prevState.originalX + prevState.lastTranslateX,
+        translateY: clientY - prevState.originalY + prevState.lastTranslateY
+      }));
+    };
 
-    this.setState(prevState => ({
-      translateX: clientX - prevState.originalX + prevState.lastTranslateX,
-      translateY: clientY - prevState.originalY + prevState.lastTranslateY
-
-    }), () => {
-      if (onDrag) {
-        onDrag({
-          translateX: this.state.translateX,
-          translateY: this.state.translateY
-        });
-      }
-    });
-  };
+  }
 
   handleMouseUp = () => {
     window.removeEventListener('mousemove', this.handleMouseMove);
     window.removeEventListener('mouseup', this.handleMouseUp);
 
+
+
+    this.ref.current.style.pointerEvents = 'auto';
+
+    // this.ref.current.style.width = '50px';
+    // this.ref.current.style.height = '50px';
+    // this.ref.current.style.position = 'relative';
     this.setState(prevState => (
       {
         ...prevState,
@@ -285,41 +196,55 @@ export default class DraggableV2 extends React.Component {
           bottom: false
         },
         cursor: 'default'
-      }),
-      () => {
-        if (this.props.onDragEnd) {
-          this.props.onDragEnd();
-        }
-      }
+      })
     );
   };
 
 
 
+
   render() {
     const { children } = this.props;
-    const { translateX, translateY, isDragging, width, cursor, height } = this.state;
+    const { translateX, translateY, isDragging, width, cursor, height, windowed } = this.state;
+
+    <ShareLargeIcon></ShareLargeIcon>
 
     return (
-      <div
-        ref={this.ref}
-        onMouseDown={this.handleMouseDown}
-        onMouseOver={this.handleMouseOver}
-        onMouseOut={this.handleMouseOut}
+      <>
 
-        style={{
-          backgroundColor: 'red',
-          position: 'relative',
-          width: `${width}px`,
-          height: `${height}px`,
-          cursor: `${cursor}`,
-          transform: `translate(${translateX}px, ${translateY}px)`,
-          opacity: isDragging ? 0.8 : 1,
-          // transition: 'transform 250ms, opacity 250ms'
-        }}
-      >
-        {children}
-      </div>
+
+        <div
+          ref={this.ref}
+          onMouseDown={this.handleMouseDown}
+          onMouseOver={this.handleMouseOver}
+          onMouseOut={this.handleMouseOut}
+
+          style={{
+            backgroundColor: 'rgb(64,64,64)',
+            width: windowed ? `${width}px` : '100%',
+            height: `${height}px`,
+            cursor: `${cursor}`,
+            transform: `translate(${translateX}px, ${translateY}px)`,
+            opacity: isDragging ? 0.8 : 1,
+            position: windowed ? 'fixed' : 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+
+          }}
+        >
+          <div className="panelmover" style={{ width: '100%', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgb(43,43,43)' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"></path></svg>
+          </div>
+
+          {children}
+
+        </div>
+      </>
+
+
+
     );
   }
 }
