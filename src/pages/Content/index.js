@@ -60,6 +60,7 @@ const App = () => {
     const resizerDiv = document.createElement('div');
     const codeMirrorDiv = document.createElement('div');
 
+
     resizerDiv.style.display = 'flex';
     codeMirrorDiv.style.display = 'flex';
     codeMirrorDiv.style.flexGrow = '1';
@@ -90,10 +91,11 @@ const App = () => {
       />,
       expandButtonDiv
     )
+
+    
     render(<Resize element={kitWithArrows} />, resizerDiv)
 
     render(<CodeEditor />, codeMirrorDiv)
-
 
 
 

@@ -1,0 +1,62 @@
+.container {
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 50000;
+}
+
+.resizeable {
+  position: absolute;
+  width: 606px;
+  height: 100%;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 15px;
+  min-height: 15px;
+  z-index: 500;
+  pointer-events: none;
+}
+
+.resizer {
+  position: absolute;
+  background: black;
+  z-index: 500;
+  width: 10px;
+}
+
+.resizer-r {
+  cursor: col-resize;
+  height: 100%;
+  right: 0%;
+  top: 0;
+  width: 10px;
+  z-index: 500;
+  pointer-events: auto;
+}
+
+.resizer-t {
+  cursor: row-resize;
+  height: 5px;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+
+.resizer-b {
+  cursor: row-resize;
+  height: 5px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.resizer-l {
+  cursor: col-resize;
+  height: 100%;
+  left: 0;
+  top: 0;
+  width: 5px;
+}

@@ -213,7 +213,7 @@ export default class DraggableV2 extends React.Component {
 
   render() {
     const { children } = this.props;
-    const { translateX, translateY, isDragging, width, cursor, height, window } = this.state;
+    const { translateX, translateY, isDragging, width, cursor, height, windowed } = this.state;
 
     return (
       <>
@@ -224,28 +224,31 @@ export default class DraggableV2 extends React.Component {
           onMouseOut={this.handleMouseOut}
           style={{
             backgroundColor: 'rgb(64,64,64)',
-            width: `${width}px`,
-            height: `${height}px`,
+            width: windowed ? `${width}px` : '100%',
+            height: windowed ? `${height}px` : '100%',
             cursor: `${cursor}`,
-            transform: `translate(${translateX}px, ${translateY}px)`,
+            transform: windowed ? `translate(${translateX}px, ${translateY}px)` : 'translate(0px, 0px)',
             opacity: isDragging ? 0.8 : 1,
-            position: 'relative',
+            position: windowed ? 'fixed' : 'relative',
             display: 'flex',
             flexDirection: 'column',
             minWidth: '100px',
             minHeight: '100px',
             alignItems: 'center',
             justifyContent: 'space-between',
+            maxWidth: '600px',
+            maxHeight: '600px',
             // pointerEvents: window ? 'auto' : 'none',
           }}
         >
 
-          <div className="parent" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', backgroundColor: 'rgb(43,43,43)', paddingRight: '10px'}}>
-            <div style ={{}}></div>
+          <div className="parent" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', backgroundColor: 'rgb(43,43,43)', paddingRight: '10px' }}>
+            <div style={{}}></div>
 
-            <div className="holder" style={{  height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center',  }}>
+            <div className="holder" style={{ height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"></path></svg>
             </div>
+
 
             <div onClick={this.handleWindowState} style={{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'column' }}>
               {this.state.windowed ? (
@@ -262,6 +265,24 @@ export default class DraggableV2 extends React.Component {
 
 
           {children}
+
+
+          <div className="parent" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', backgroundColor: 'rgb(43,43,43)', paddingRight: '10px' }}>
+            <div style={{}}></div>
+
+            <div className="holder" style={{ height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', }}>
+            </div>
+
+            <div style={{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'column' }}>
+              {this.state.windowed ? (
+                <CrossLargeIcon></CrossLargeIcon>
+              ) : (
+                <ShareLargeIcon></ShareLargeIcon>
+              )}
+            </div>
+          </div>
+
+
 
         </div>
       </>

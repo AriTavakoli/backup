@@ -24,7 +24,7 @@ export default function ExpandableMenu({exportWindow, codeWindow, codeBar, codeD
 
 
 
-    
+
     codeWindow.style.transition = 'height 0.5s ease-in-out, width 0.5s ease-in-out';
 
 
