@@ -105,9 +105,9 @@ export default class WebflowExtractor {
       });
     });
   }
+
+
   waitForCodeWindow() {
-
-
 
     return new Promise(resolve => {
 

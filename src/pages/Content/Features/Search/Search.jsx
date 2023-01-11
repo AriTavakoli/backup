@@ -4,8 +4,7 @@ import CodeExtractor from '../../Parser/codeExtractor';
 import WebflowExtractor from '../../Parser/webflowExtractor';
 
 
-export default function Search() {
-
+export default function Search({cssStyleSheet}) {
 
   const [value, setValue] = useState("");
   const [tab, setTab] = useState("HTML");
@@ -29,7 +28,6 @@ export default function Search() {
     setValue(event.target.value);
     setCurrentRowIndex(-1)
 
-    //!!!
     setCurrentData(Object.keys(cssJson).filter(filterFunction).slice(0, 10))
 
   };
@@ -64,9 +62,6 @@ export default function Search() {
 
 
 
-
-
-
   const handleClear = () => {
     setValue("");
     setCurrentData([])
@@ -87,9 +82,10 @@ export default function Search() {
 
   const observeGetCss = async () => {
     const codeExtractor = new CodeExtractor();
-    let css = await codeExtractor.extractCss();
+    let css = await codeExtractor.mutationObserverElementWithSelector('code');
+    console.log(css, 'css is here');
     setCssJson(codeExtractor.convertCssToJson(css));
-    // console.log(codeExtractor.convertCssToJsonV2(css), 'cssJson');
+    console.log(codeExtractor.convertCssToJsonV2(css), 'cssJson');
     setCss(css)
     console.log(cssJson, 'cssJson');
   }
@@ -211,8 +207,6 @@ export default function Search() {
         availableCategories={availableCategories}
 
       >
-
-
 
 
       </SearchBar>

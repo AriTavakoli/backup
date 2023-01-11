@@ -1,20 +1,13 @@
-import { printLine } from './modules/print';
-import html from './test.html'
-import React, { useState, useEffect } from 'react';
-import * as ReactDOM from 'react-dom/client';
-import HtmlParser from './Parser/htmlParser';
-import CssParser from './Parser/cssParser';
-import WebflowExtractor from './Parser/webflowExtractor';
-import Search from './Features/Search/Search';
+import React from 'react';
 import { render } from 'react-dom';
-import logo from '../../assets/img/logo.svg';
-import SearchV2 from './Parser/search/searchv2';
-import CodeExtractor from './Parser/codeExtractor';
+import * as ReactDOM from 'react-dom/client';
+import CodeEditor from './Features/CodeEditor/CodeEditor';
 import ExpandableMenu from './Features/ExpandMenu/ExpandableMenu';
 import Resize from './Features/ExpandMenu/Resize';
-import CodeEditor from './Features/CodeEditor/CodeEditor';
-import Panel from './Features/CodeEditor/Panel/Panel';
-import DraggablePanel from './Features/CodeEditor/PanelV2/index';
+import Search from './Features/Search/Search';
+import { printLine } from './modules/print';
+import CodeExtractor from './Parser/codeExtractor';
+import WebflowExtractor from './Parser/webflowExtractor';
 
 
 console.log('Content script works!');
@@ -26,7 +19,7 @@ printLine("Using the 'printLine' function from the Print Module");
 
 const App = () => {
 
-  function exportInit() {
+  function exportInit(css, html) {
 
     let tabBar = document.querySelectorAll('.kit-scrollbar')[1].children[0]
     let codeBar = document.querySelectorAll('.kit-scrollbar')[1].children[1] // ? width and heigh are adjustable for codespaces
@@ -41,16 +34,10 @@ const App = () => {
     console.log(codeWindow, 'codeWindow');
     console.log(exportWindow, 'exportWindow');
 
-
-
-
-
-
-
     codeBar.style.display = 'flex'
     codeDocKitScrollBar.style.height = '509px'
     kitWithArrows.children[0].style.display = 'flex';
-    kitWithArrows.style.maxWidth = 'fit-content'
+    // kitWithArrows.style.maxWidth = 'fit-content'
     // kitWithArrows.style.maxWidth = 'fit-content'
     // kitWithArrows.style.position = 'relative'
 
@@ -70,18 +57,14 @@ const App = () => {
 
 
 
-
-    console.log(resizerDiv, 'resizerDiv');
-
-
-
     tabBar.appendChild(searchBarDiv);
     codeBar.appendChild(expandButtonDiv);
     kitWithArrows.prepend(resizerDiv);
     codeBar.appendChild(codeMirrorDiv);
 
 
-    // render(<Search />, searchBarDiv)
+    render(<Search cssStyleSheet = {css} />, searchBarDiv)
+
     render(
       <ExpandableMenu
         codeWindow={codeWindow}
@@ -92,10 +75,12 @@ const App = () => {
       expandButtonDiv
     )
 
-    
     render(<Resize element={kitWithArrows} />, resizerDiv)
 
     render(<CodeEditor />, codeMirrorDiv)
+
+
+
 
 
 
@@ -104,15 +89,11 @@ const App = () => {
 
 
 
+  // !!init function
 
 
-  async function exportEventListener() {
+  async function exportInitListener() {
     const exportButton = document.querySelector('.bem-TopBar_Body_Button.bem-TopBar_Body_ExportButton')
-
-
-
-    // 1. ) add event listener to export button
-    // 2. ) when clicked, add search bar to codeWindow
 
 
 
@@ -121,62 +102,14 @@ const App = () => {
 
 
       const codeExtractor = new CodeExtractor();
-      const init = await codeExtractor.mutationObserverElementWithSelector('code')
+      const cssStyleSheet = await codeExtractor.mutationObserverElementWithSelector('code')
 
-      exportInit()
+      console.log(cssStyleSheet, 'init console.log();');
 
-
-      // .div-block-8 {
-      //   flex-grow: 1;
-      //   flex-shrink: 1;
-      //   flex-basis: 0%;
-      // }
-
-      //   setTimeout(() => {
-
-      //     let tabBar = document.querySelectorAll('.kit-scrollbar')[1].children[0]
-      //     let codeBar = document.querySelectorAll('.kit-scrollbar')[1].children[1]
+      // logic of the event listener;
+      exportInit(cssStyleSheet)
 
 
-      //     let codeDoc = document.querySelectorAll('.kit-scrollbar')[1]
-      //     let codeWindow = document.querySelectorAll('.kit-scrollbar')[1].children[1].children[1]
-
-
-
-
-
-
-
-      //     console.log(codeDoc, 'codeDoc');
-
-      //     console.log(codeBar, 'codebar');
-
-      //     let exportWindow = document.getElementsByClassName('--styled-hAngBs wf-16d2cwq')[0].children[0].children[0].children[0]
-
-
-
-
-
-      //     console.log(exportWindow, 'exportWindow');
-
-
-
-      //     codeDoc.style.height = '509px'
-
-      //     // create a div element
-      //     const searchBarDiv = document.createElement('div');
-      //     const expandButtonDiv = document.createElement('div');
-
-      //     tabBar.appendChild(searchBarDiv);
-      //     codeBar.appendChild(expandButtonDiv);
-
-
-
-
-      //     render(<Search />, searchBarDiv)
-      //     render(<ExpandableMenu codeWindow={codeWindow} codeBar={codeBar} codeDoc={codeDoc} exportWindow={exportWindow} />, expandButtonDiv)
-
-      //   }, 200)
 
     })
 
@@ -186,7 +119,7 @@ const App = () => {
 
   const exporter = async () => {
 
-    exportEventListener().then(() => {
+    exportInitListener().then(() => {
       console.log('addingTab event listener');
       console.log('addedTab event listener');
     })

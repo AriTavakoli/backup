@@ -23,9 +23,9 @@ function Resize({ element, }) {
       x = event.clientX;
       width = width + dx;
       // Check if the new width exceeds the maximum allowed width
-      if (width > maxWidth) {
-        width = maxWidth;
-      }
+      // if (width > maxWidth) {
+      //   width = maxWidth;
+      // }
 
       resizeableEle.style.width = `${width}px`;
       element.style.width = `${width}px`;

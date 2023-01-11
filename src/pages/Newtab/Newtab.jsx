@@ -133,12 +133,13 @@ const Newtab = () => {
 
 
         <button onClick={() => { getStyles() }}>Get Elements</button>
+        <Search></Search>
         {/* <Panel />
       <Search> </Search> */}
         {/* <Draggable></Draggable> */}
-        <DraggableV2>
+        {/* <DraggableV2>
 
-        </DraggableV2>
+        </DraggableV2> */}
 
 
       </div>

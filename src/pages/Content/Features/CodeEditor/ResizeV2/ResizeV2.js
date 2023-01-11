@@ -1,12 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import "./ResizeV2.css";
 
-function ResizeV2() {
+function ResizeV2({element}) {
   const ref = useRef(null);
   const refLeft = useRef(null);
-  const refTop = useRef(null);
-  const refRight = useRef(null);
-  const refBottom = useRef(null);
 
   useEffect(() => {
     const resizeableEle = ref.current;
@@ -19,67 +16,7 @@ function ResizeV2() {
     resizeableEle.style.top = "50px";
     resizeableEle.style.left = "50px";
 
-    // Right resize
-    const onMouseMoveRightResize = (event) => {
-      const dx = event.clientX - x;
-      x = event.clientX;
-      width = width + dx;
-      resizeableEle.style.width = `${width}px`;
-    };
-
-    const onMouseUpRightResize = (event) => {
-      document.removeEventListener("mousemove", onMouseMoveRightResize);
-    };
-
-    const onMouseDownRightResize = (event) => {
-      x = event.clientX;
-      resizeableEle.style.left = styles.left;
-      resizeableEle.style.right = null;
-      document.addEventListener("mousemove", onMouseMoveRightResize);
-      document.addEventListener("mouseup", onMouseUpRightResize);
-    };
-
-    // Top resize
-    const onMouseMoveTopResize = (event) => {
-      const dy = event.clientY - y;
-      height = height - dy;
-      y = event.clientY;
-      resizeableEle.style.height = `${height}px`;
-    };
-
-    const onMouseUpTopResize = (event) => {
-      document.removeEventListener("mousemove", onMouseMoveTopResize);
-    };
-
-    const onMouseDownTopResize = (event) => {
-      y = event.clientY;
-      const styles = window.getComputedStyle(resizeableEle);
-      resizeableEle.style.bottom = styles.bottom;
-      resizeableEle.style.top = null;
-      document.addEventListener("mousemove", onMouseMoveTopResize);
-      document.addEventListener("mouseup", onMouseUpTopResize);
-    };
-
-    // Bottom resize
-    const onMouseMoveBottomResize = (event) => {
-      const dy = event.clientY - y;
-      height = height + dy;
-      y = event.clientY;
-      resizeableEle.style.height = `${height}px`;
-    };
-
-    const onMouseUpBottomResize = (event) => {
-      document.removeEventListener("mousemove", onMouseMoveBottomResize);
-    };
-
-    const onMouseDownBottomResize = (event) => {
-      y = event.clientY;
-      const styles = window.getComputedStyle(resizeableEle);
-      resizeableEle.style.top = styles.top;
-      resizeableEle.style.bottom = null;
-      document.addEventListener("mousemove", onMouseMoveBottomResize);
-      document.addEventListener("mouseup", onMouseUpBottomResize);
-    };
+    const maxWidth = element.offSetWidth;
 
     // Left resize
     const onMouseMoveLeftResize = (event) => {
@@ -87,6 +24,14 @@ function ResizeV2() {
       x = event.clientX;
       width = width - dx;
       resizeableEle.style.width = `${width}px`;
+
+      if (width > maxWidth) {
+        width = maxWidth;
+      }
+      resizeableEle.style.width = `${width}px`;
+      element.style.width = `${width}px`;
+
+
     };
 
     const onMouseUpLeftResize = (event) => {
@@ -97,24 +42,21 @@ function ResizeV2() {
       x = event.clientX;
       resizeableEle.style.right = styles.right;
       resizeableEle.style.left = null;
+
+      // element.style.pointerEvents = "none";
+
+
       document.addEventListener("mousemove", onMouseMoveLeftResize);
       document.addEventListener("mouseup", onMouseUpLeftResize);
     };
 
     // Add mouse down event listener
-    const resizerRight = refRight.current;
-    resizerRight.addEventListener("mousedown", onMouseDownRightResize);
-    const resizerTop = refTop.current;
-    resizerTop.addEventListener("mousedown", onMouseDownTopResize);
-    const resizerBottom = refBottom.current;
-    resizerBottom.addEventListener("mousedown", onMouseDownBottomResize);
+
     const resizerLeft = refLeft.current;
     resizerLeft.addEventListener("mousedown", onMouseDownLeftResize);
 
     return () => {
-      resizerRight.removeEventListener("mousedown", onMouseDownRightResize);
-      resizerTop.removeEventListener("mousedown", onMouseDownTopResize);
-      resizerBottom.removeEventListener("mousedown", onMouseDownBottomResize);
+
       resizerLeft.removeEventListener("mousedown", onMouseDownLeftResize);
     };
   }, []);
@@ -122,9 +64,9 @@ function ResizeV2() {
   return (
     <div ref={ref} className="resizeableV2">
       <div ref={refLeft} className="resizerV2 resizer-lV2"></div>
-      <div ref={refTop} className="resizerV2 resizer-tV2"></div>
+      {/* <div ref={refTop} className="resizerV2 resizer-tV2"></div>
       <div ref={refRight} className="resizerV2 resizer-rV2"></div>
-      <div ref={refBottom} className="resizerV2 resizer-bV2"></div>
+      <div ref={refBottom} className="resizerV2 resizer-bV2"></div> */}
     </div>
   );
 }

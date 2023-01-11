@@ -1,9 +1,9 @@
 export default class CodeExtractor {
 
 
+//!!
 
-
-
+// extracts the innner css of the stylesheet
 
   mutationObserverElementWithSelector(selector) {
 
@@ -24,9 +24,9 @@ export default class CodeExtractor {
           //get the export modal and display none
 
           // console.log('resolved', listenElement.textContent)
-          console.log('successfull extraction');
+          // console.log('successfull extraction');
 
-          resolve(listenElement);
+          resolve(listenElement.textContent);
           observer.disconnect();
         }
 
