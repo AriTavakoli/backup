@@ -47,10 +47,7 @@ export default function SearchResults() {
 
   return (
     <div>
-
-
       <div className="dropdown" style={{ zIndex: '499' }} ref={dropdownRef}>
-
         <div className="dropdown">
           {filteredResults.map((className, index) => (
             <div

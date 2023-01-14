@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --black:
+    rgb(255, 255, 255);
+  --alto:
+    rgba(217, 217, 217, 1);
+  --white:
+    rgba(255, 255, 255, 1);
+
+  --font-size-s: 14px;
+  --font-size-m: 24px;
+
+  --font-family-inter: "Inter";
+}
+
+
+
+.inter-normal-black-14px {
+  color: var(--black);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-s);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.inter-normal-black-24px {
+  color: var(--black);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.result-row {
+  align-items: center;
+  background-color: #4c4c4c;
+  border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  height: 128px;
+  justify-content: center;
+  overflow: hidden;
+  padding: 20px 80px 20px 20px;
+  position: relative;
+  width: 518px;
+}
+
+.row-content-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  height: 86px;
+  justify-content: center;
+  width: fit-content;
+}
+
+.title {
+  color: var(--black);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  width: fit-content;
+}
+
+.sub-row {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  overflow: hidden;
+  width: 394px;
+}
+
+.arrow-icon {
+  height: 35.55px;
+  min-width: 20px;
+}
+
+.you-can-search-through-item-name {
+  color: var(--black);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-s);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  width: fit-content;
+}
