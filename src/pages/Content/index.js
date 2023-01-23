@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import * as ReactDOM from 'react-dom/client';
 import CodeEditor from './Features/CodeEditor/CodeEditor';
@@ -251,8 +251,118 @@ const App = () => {
   function getAppliedStyles(iframeId, elementId) {
     chrome.tabs.executeScript({
       code: 'console.log("hi");'
-      });
+    });
   }
+
+
+  const fire = () => {
+
+    var iframeStylesheets = document.querySelector('#site-iframe-next').contentDocument.styleSheets[5].cssRules[0].cssRules;
+    for (var i = 0; i < iframeStylesheets.length; i++) {
+      // console.log(iframeStylesheets[i]);
+    }
+    return iframeStylesheets;
+
+  }
+
+
+  const SearchStyleSheet = (className) => {
+    const styleSheet = fire();
+
+    className = '.' + className;
+
+    let newClassName = className.replace(/ /g, '-').toLowerCase();
+
+    console.log(className, 'className');
+
+    console.log(newClassName, 'newClassName');
+
+
+    for (var i = 0; i < styleSheet.length; i++) {
+      if (styleSheet[i].selectorText === newClassName) {
+        console.log(styleSheet[i].cssText, 'styleSheet[i].selectorText');
+        return styleSheet[i];
+      }
+    }
+
+
+
+
+  }
+
+
+
+
+  function classMutationObserver() {
+    // Select the node that will be observed for mutations
+    const target = document.body;
+
+    // Options for the observer (which mutations to observe)
+    const config = { childList: true, subtree: true };
+
+    // Create an observer instance linked to the callback function
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === "childList") {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              const element = node.querySelector("[data-automation-id='style-rule-token-text']");
+              if (element) {
+                console.log("New element: ", element);
+
+                SearchStyleSheet(element.innerText);
+
+              }
+            }
+          });
+        }
+      });
+    });
+
+    // Start observing the target node for configured mutations
+    observer.observe(target, config);
+  }
+
+
+
+
+
+
+
+
+
+
+  const getHtml = () => {
+    // Get the iframe element
+    const iframe = document.querySelector('#site-iframe-next').contentDocument;
+    // Get the body element
+    const body = iframe.querySelector('body');
+    console.log(body, 'body');
+
+    // Use DOMParser to get html
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(body.innerHTML, 'text/html');
+
+    // Get all elements in the body
+    const elements = doc.querySelectorAll('body *');
+
+    // Remove the data-w-id and data-wf-id attributes from each element
+    elements.forEach(element => {
+      element.removeAttribute('data-w-id');
+      element.removeAttribute('data-wf-id');
+    });
+
+    console.log(doc, 'doc');
+    console.log(doc.body, 'doc.body');
+
+    // return the doct body
+    return doc.body;
+  }
+
+
+
+
+
 
 
 
@@ -292,6 +402,9 @@ const App = () => {
       <DraggablePanel></DraggablePanel> */}
       <button onClick={() => { networkRequest() }}>Request</button>
       <button onClick={() => { getAppliedStyles('site-iframe-next', 'sc') }}>style</button>
+      <button onClick={() => { fire() }}>fire</button>
+      <button onClick={() => { getHtml() }}>get html</button>
+      <button onClick={() => { classMutationObserver() }}>MutationObserver</button>
       {/* <button onClick={() => { exporter(); getComponent(); }}>Get Elements</button> */}
     </div>
   );
