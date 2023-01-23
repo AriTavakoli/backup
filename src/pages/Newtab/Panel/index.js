@@ -10,7 +10,9 @@ const PanelPortal = (props) => {
 
   return (
     <Portal>
-      <Panel {...props} />
+      <Panel {...props} >
+        <div stlye = {{width: '200px', height: '200px', backgroundColor: 'black'}}>sdsds</div>
+      </Panel>
     </Portal>
   )
 };

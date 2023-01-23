@@ -24,9 +24,6 @@ export default function Editor(props) {
 
 
     <div className={`editor-container ${open ? '' : 'collapsed'}`}>
-
-
-
       <div className="editor-title">
         {displayName}
         <button

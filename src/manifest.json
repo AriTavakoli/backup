@@ -20,6 +20,10 @@
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
+
+
+
+
   "icons": {
     "128": "icon-128.png"
   },
@@ -43,7 +47,8 @@
     {
       "resources": [
         "content.styles.css",
-        "icon-34.png"
+        "icon-34.png",
+        "../../chrome-extension-boilerplate-react/src/pages/Popup/index.html"
       ],
       "matches": []
     }

@@ -8,7 +8,7 @@ import Search from './Features/Search/Search';
 import { printLine } from './modules/print';
 import CodeExtractor from './Parser/codeExtractor';
 import WebflowExtractor from './Parser/webflowExtractor';
-
+import axios from 'axios'
 
 console.log('Content script works!');
 console.log('Must reload extension for modifications to take effect.');
@@ -63,7 +63,7 @@ const App = () => {
     codeBar.appendChild(codeMirrorDiv);
 
 
-    render(<Search cssStyleSheet = {css} />, searchBarDiv)
+    render(<Search cssStyleSheet={css} />, searchBarDiv)
 
     render(
       <ExpandableMenu
@@ -248,13 +248,51 @@ const App = () => {
 
   }
 
+  function getAppliedStyles(iframeId, elementId) {
+    chrome.tabs.executeScript({
+      code: 'console.log("hi");'
+      });
+  }
+
+
+
+
+  const networkRequest = async () => {
+    let session = '';
+
+    const req = await axios({
+      url: 'https://webflow.com/api/sites/aris-stunning-site/queue-export',
+      method: 'get',
+    }).then((data) => {
+      session = data.data.exportTaskId;
+      return session;
+    });
+
+    while (true) {
+      let status = '';
+      const req2 = await axios({
+        url: `https://webflow.com/api/site/aris-stunning-site/tasks/${session}`,
+        method: 'get',
+      }).then((data) => {
+        status = data.data.status.status;
+        console.log(`Task status: ${JSON.stringify(data.data.status)}`);
+        console.log(data, 'ksjdfkjsdf');
+      });
+      if (status === 'finished') break;
+      await new Promise(resolve => setTimeout(resolve, 1300));
+    }
+  }
+
+
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <h1>Export code</h1>
       {/* <Panel></Panel>
       <DraggablePanel></DraggablePanel> */}
-      <button onClick={() => { exporter(); getComponent(); }}>Get Elements</button>
+      <button onClick={() => { networkRequest() }}>Request</button>
+      <button onClick={() => { getAppliedStyles('site-iframe-next', 'sc') }}>style</button>
+      {/* <button onClick={() => { exporter(); getComponent(); }}>Get Elements</button> */}
     </div>
   );
 };

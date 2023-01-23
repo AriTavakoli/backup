@@ -89,12 +89,14 @@ const Panel = ({ children }) => {
   return (
     <div className="panel" ref={panelRef}>
       <div className="panel__container">
+      {children}
+
+<div>sdsd</div>
         <Resizer onResize={handleResize} />
 
         <PanelHeader onDrag={handleDrag} />
 
         <div className="panel__content">
-          {children}
         </div>
       </div>
     </div>

@@ -12,10 +12,42 @@ import htmlFile from './test.html';
 import css from './css.txt'
 import Draggable from './Draggable/Draggable'
 import DraggableV2 from './DragClass/DraggableV2.js'
+import axios from 'axios'
 
 const Newtab = () => {
 
 
+  function createNewWindow(left, top, width, height) {
+    chrome.windows.create({
+      url: 'popup.html',
+      type: "popup",
+      tabId: null,
+      left: left,
+      top: top,
+      width: width,
+      height: height
+    });
+  }
+  function moveWindowToLeft() {
+    chrome.windows.getCurrent(function (currentWindow) {
+      chrome.windows.update(currentWindow.id, {
+        left: 0,
+        top: 0
+      });
+    });
+  }
+
+
+  const networkRequest = async () => {
+
+    const req = await axios({
+      url: 'https://webflow.com/api/sites/aris-stunning-site/queue-export',
+      method : 'get'
+    }).then((data) => {
+      console.log(data, 'data');
+    })
+
+  }
 
   const getStyles = async () => {
 
@@ -34,6 +66,9 @@ const Newtab = () => {
 
 
     const cssParser = new CssParser(css);
+
+
+    console.log(css);
 
 
 
@@ -132,8 +167,9 @@ const Newtab = () => {
       <div style={{ height: '200vh' }}>
 
 
-        <button onClick={() => { getStyles() }}>Get Elements</button>
-        <Search></Search>
+        <button onClick={() => { createNewWindow(100, 100, 400, 300); }}>Get Elements</button>
+        <button onClick={() => { moveWindowToLeft()}}>Move</button>
+        <button onClick={() => {  networkRequest()}}>Request</button>
         {/* <Panel />
       <Search> </Search> */}
         {/* <Draggable></Draggable> */}
