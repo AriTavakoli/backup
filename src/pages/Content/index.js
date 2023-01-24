@@ -19,240 +19,8 @@ printLine("Using the 'printLine' function from the Print Module");
 
 const App = () => {
 
-  function exportInit(css, html) {
 
-    let tabBar = document.querySelectorAll('.kit-scrollbar')[1].children[0]
-    let codeBar = document.querySelectorAll('.kit-scrollbar')[1].children[1] // ? width and heigh are adjustable for codespaces
-    let codeDocKitScrollBar = document.querySelectorAll('.kit-scrollbar')[1]
-    let codeWindow = document.querySelectorAll('.kit-scrollbar')[1].children[1].children[1]
-    let exportWindow = document.getElementsByClassName('--styled-hAngBs wf-16d2cwq')[0].children[0].children[0].children[0]
-    let kitWithArrows = codeBar.children[0];
-
-    console.log(codeDocKitScrollBar, 'codeDocKitScrollBar');
-    console.log(kitWithArrows, 'kitWithArrows');
-    console.log(codeBar, 'codebar');
-    console.log(codeWindow, 'codeWindow');
-    console.log(exportWindow, 'exportWindow');
-
-    codeBar.style.display = 'flex'
-    codeDocKitScrollBar.style.height = '509px'
-    kitWithArrows.children[0].style.display = 'flex';
-    // kitWithArrows.style.maxWidth = 'fit-content'
-    // kitWithArrows.style.maxWidth = 'fit-content'
-    // kitWithArrows.style.position = 'relative'
-
-    // create a div element
-    const searchBarDiv = document.createElement('div');
-    const expandButtonDiv = document.createElement('div');
-    const resizerDiv = document.createElement('div');
-    const codeMirrorDiv = document.createElement('div');
-
-
-    resizerDiv.style.display = 'flex';
-    codeMirrorDiv.style.display = 'flex';
-    codeMirrorDiv.style.flexGrow = '1';
-    codeMirrorDiv.style.flexShrink = '1';
-    codeMirrorDiv.style.flexBasis = '0%';
-    codeMirrorDiv.style.minWidth = '0px';
-
-
-
-    tabBar.appendChild(searchBarDiv);
-    codeBar.appendChild(expandButtonDiv);
-    kitWithArrows.prepend(resizerDiv);
-    codeBar.appendChild(codeMirrorDiv);
-
-
-    render(<Search cssStyleSheet={css} />, searchBarDiv)
-
-    render(
-      <ExpandableMenu
-        codeWindow={codeWindow}
-        codeBar={codeBar}
-        codeDoc={codeDocKitScrollBar}
-        exportWindow={exportWindow}
-      />,
-      expandButtonDiv
-    )
-
-    render(<Resize element={kitWithArrows} />, resizerDiv)
-
-    render(<CodeEditor />, codeMirrorDiv)
-
-
-
-
-
-
-
-  }
-
-
-
-  // !!init function
-
-
-  async function exportInitListener() {
-    const exportButton = document.querySelector('.bem-TopBar_Body_Button.bem-TopBar_Body_ExportButton')
-
-
-
-    exportButton.addEventListener('click', async () => {
-      console.log('clicked')
-
-
-      const codeExtractor = new CodeExtractor();
-      const cssStyleSheet = await codeExtractor.mutationObserverElementWithSelector('code')
-
-      console.log(cssStyleSheet, 'init console.log();');
-
-      // logic of the event listener;
-      exportInit(cssStyleSheet)
-
-
-
-    })
-
-
-  }
-
-
-  const exporter = async () => {
-
-    exportInitListener().then(() => {
-      console.log('addingTab event listener');
-      console.log('addedTab event listener');
-    })
-
-  }
-
-
-  const getStyles = async () => {
-
-    //     getComponent();
-    //     let css = await getCSS();
-    //     console.log(css, 'css');
-
-
-    const parser = new WebflowExtractor();
-
-
-    // adds event listener to export button and Renders search bar
-
-
-
-
-    parser.waitForElementInIframe('drop-down');
-
-
-
-    parser.waitForDomElement('[data-automation-id="panel-header"]').then((elm) => {
-      console.log(elm, 'elm');
-    })
-
-
-
-
-  }
-
-  const ShareLargeIcon = () => {
-    return (
-      <button
-        data-automation-id="symbol-panel-drop-down-edit"
-        type="button"
-        sizing="small"
-        structure="ghost"
-        tabindex="0"
-        style={{
-          border: 'none',
-          outline: '0px',
-          cursor: 'default',
-          userSelect: 'none',
-          padding: '0px',
-          fontFamily: 'inherit',
-          fontSize: '11px',
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '24px',
-          borderRadius: '2px',
-          color: 'rgb(171, 171, 171)',
-          background: 'transparent',
-          boxSizing: 'border-box',
-          boxShadow: 'none',
-          alignSelf: 'center',
-          width: '24px'
-        }}
-      >
-        <div className="--styled-lihrRi wf-1mrza4x">
-          <svg
-            data-icon="ShareLarge"
-            aria-hidden="true"
-            focusable="false"
-            width="14"
-            height="14"
-            viewBox="0 0 20 20"
-            className="bem-Svg"
-          >
-            <path
-              fill="currentColor"
-              d="M14 11V7.33h-2a3 3 0 00-3 3v3H7v-3a4.998 4.998 0 015-5h2V2l6 4.5-6 4.5z"
-            />
-            <path
-              fill="currentColor"
-              d="M7.108 4H2a1 1 0 00-1 1v12a1 1 0 001 1h15a1 1 0 001-1v-5.25l-2 1.5V16H3V6h2.272a8.044 8.044 0 011.836-2z"
-            />
-          </svg>
-        </div>
-      </button>
-    );
-  };
-
-
-  const getComponent = () => {
-
-    const componentParser = new WebflowExtractor();
-
-    const componentButton = document.querySelector('[data-automation-id="left-sidebar-symbols-button"]')
-
-    componentButton.addEventListener('click', () => {
-      setTimeout(() => {
-        let componenTabChildren = document.getElementsByClassName('--styled-kDKPFq wf-kih0vo')[0].children
-        console.log(componenTabChildren, 'componenTabChildren');
-
-
-        for (let i = 0; i < componenTabChildren.length; i++) {
-
-          console.log();
-
-          let componentTab = componenTabChildren[i].children[0].children[0]
-          console.log(componentTab, 'componentTab');
-
-          const div = document.createElement('div');
-          div.addEventListener('click', (e) => {
-            console.log('clicked');
-
-            //stop the event from bubbling up
-            e.stopPropagation();
-
-          })
-          componentTab.appendChild(div);
-          render(<ShareLargeIcon />, div)
-        }
-      }, 200)
-
-
-
-    })
-
-  }
-
-  function getAppliedStyles(iframeId, elementId) {
-    chrome.tabs.executeScript({
-      code: 'console.log("hi");'
-    });
-  }
+  let port;
 
 
   const fire = () => {
@@ -280,17 +48,20 @@ const App = () => {
 
     for (var i = 0; i < styleSheet.length; i++) {
       if (styleSheet[i].selectorText === newClassName) {
+
+        let data = {
+          message: 'styleSheet[i].cssText',
+          data: styleSheet[i].cssText
+        }
         console.log(styleSheet[i].cssText, 'styleSheet[i].selectorText');
+
+        port.postMessage(data);
+        console.log('posted');
         return styleSheet[i];
       }
     }
 
-
-
-
   }
-
-
 
 
   function classMutationObserver() {
@@ -325,11 +96,14 @@ const App = () => {
 
 
 
-
-
-
-
-
+  function moveWindowToLeft() {
+    chrome.windows.getCurrent(function (currentWindow) {
+      chrome.windows.update(currentWindow.id, {
+        left: 0,
+        top: 0
+      });
+    });
+  }
 
 
   const getHtml = () => {
@@ -357,6 +131,25 @@ const App = () => {
 
     // return the doct body
     return doc.body;
+  }
+
+  const CreateTab = () => {
+    // post message to background.js
+    (async () => {
+      const response = await chrome.runtime.sendMessage({ message: "createPopup" });
+      // do something with response here, not outside the function
+      console.log(response);
+    })();
+
+  }
+
+  const message = () => {
+    (async () => {
+      const response = await chrome.runtime.sendMessage({ message: "relay" });
+      // do something with response here, not outside the function
+      console.log(response);
+    })();
+
   }
 
 
@@ -401,10 +194,12 @@ const App = () => {
       {/* <Panel></Panel>
       <DraggablePanel></DraggablePanel> */}
       <button onClick={() => { networkRequest() }}>Request</button>
-      <button onClick={() => { getAppliedStyles('site-iframe-next', 'sc') }}>style</button>
       <button onClick={() => { fire() }}>fire</button>
+      {/* <button onClick={() => { createNewWindow() }}>SearchStyleSheet</button> */}
       <button onClick={() => { getHtml() }}>get html</button>
       <button onClick={() => { classMutationObserver() }}>MutationObserver</button>
+      <button onClick={() => { CreateTab() }}>Create Tab</button>
+      <button onClick={() => { message() }}>Message</button>
       {/* <button onClick={() => { exporter(); getComponent(); }}>Get Elements</button> */}
     </div>
   );

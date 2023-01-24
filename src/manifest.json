@@ -9,7 +9,12 @@
   "permissions": [
     "declarativeWebRequest",
     "tabs",
-    "*://*/*"
+    "*://*/*",
+    "nativeMessaging",
+    "runtime",
+    "storage",
+    "webRequest",
+    "webRequestBlocking"
   ],
   "host_permissions": [
     "https://webflow.com/*"
@@ -20,10 +25,6 @@
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
-
-
-
-
   "icons": {
     "128": "icon-128.png"
   },
